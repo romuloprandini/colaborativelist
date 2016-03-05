@@ -1,0 +1,14 @@
+<div class="item-checkbox">
+    <label class="checkbox">
+        <input type="checkbox" 
+        ng-model="product.checked"
+        ng-checked="product.checked" ng-change="check(product._id)">
+    </label>
+    <span ng-class="{'product-checked': product.checked}">
+      <h2>{{product.name}}</h2>
+      <div class="list-details">{{product.unit}} x {{product.price | currency}} / 
+      {{product.amount}} {{product.measure}}</div>
+      <div class="list-price">{{(product.unit * product.price) | currency}}</div>
+    </span>
+</div>
+<button ng-click="openOptions($event, product._id)" class="button button-icon ion-android-more-vertical product-options"></button>

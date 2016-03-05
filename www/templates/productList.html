@@ -1,0 +1,36 @@
+<ion-view view-title="{{translation.PRODUCT_LIST_LABEL}}" hide-nav-bar="hasSearch || isHideNavBar">
+    <search show-search="hasSearch" filter="query.name" translation="translation"></search>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear button-icon ion-plus" ng-click="add()"></button>
+        <button class="button button-clear button-icon ion-search" ng-click="showSearch(true)"></button>
+        <button class="button button-clear fa fa-sort-alpha-asc" ng-click="openOrder($event)"></button>
+    </ion-nav-buttons>
+    <ion-content on-scroll="hideNavBar('listProductsScroll')" delegate-handle="listProductsScroll" class="has-footer">
+        <div class="content"  ng-class="{'has-header' : hasSearch}">
+        <ion-list>
+            <ion-item 
+            ng-repeat="product in list1=((productCollection | filterProductCollection:query) | orderProducts:order:revert | filter:{checked: false})" ng-hide="product.checked && hideChecked" class="product-item">
+                <product />
+            </ion-item>
+            <ion-item ng-click="toogleChecked()" class="item-divider item-divider-products" ng-class="hideChecked? 'ion-arrow-down-b': 'ion-arrow-up-b'" ng-show="list2.length > 0">
+                <a class="button button-clear button-dark icon-right button-small ">
+                    <h2>{{translation.CHECKED_PRODUCTS_LABEL}}</h2>
+                </a>
+            </ion-item>
+            <ion-item 
+            ng-repeat="product in list2=((productCollection | filterProductCollection:query) | orderProducts:order:revert | filter:{checked: true})"  ng-hide="hideChecked" class="product-item">
+                <product />
+            </ion-item>
+            <ion-item ng-show="list1.length < 1 && list2.length < 1">
+            {{translation.NO_RECORDS_FOUND}}
+            </ion-item>
+        </ion-list>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer bar-assertive">
+        <div class="list-total">
+            <div class="itens">{{translation.ITENS_LABEL}} <strong>{{productsTotal}}</strong></div>
+            <div class="price">{{translation.PRICE_LABEL}} <strong>{{priceTotal | currency}}</strong></div>
+        </div>
+    </div>
+</ion-view>

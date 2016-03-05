@@ -1,0 +1,137 @@
+<ion-side-menus enable-menu-with-back-views="true">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left">
+    <ion-content class="menu-outer">
+      <div class="row menu-top-options">
+        <div class="col col-top">
+          <ion-item class="heading-item colored" ng-show="user.isLoggedIn()">
+            <div class="row">
+              <div class="col">
+                <!-- We need a wrapper with width set for the preload image directive -->
+                <div class="user-image-outer">
+                  <pre-img ratio="_1_1" helper-class="rounded-image">
+                    <img class="user-image" ng-if="user.get().avatar != ''" ng-src="{{user.get().avatar}}" spinner-on-load>
+                    <img class="user-image" ng-if="user.get().avatar == ''" ng-src="../img/avatar.png" spinner-on-load>
+                  </pre-img>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h1 class="greeting">{{user.get().nome}}</h1>
+                <p class="message">{{user.get().email}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+              <input type="button" class="btn btn-link" value="sair" ng-click="logout()"/>
+              </div>
+            </div>
+          </ion-item>
+          <ion-item class="heading-item" ng-hide="user.isLoggedIn()" menu-close>
+            <div class="row">
+              <div class="col">
+                <!-- We need a wrapper with width set for the preload image directive -->
+                <div class="user-image-outer">
+                  <pre-img ratio="_1_1" helper-class="rounded-image">
+                    <img class="user-image" ng-src="../img/avatar.png" spinner-on-load>
+                  </pre-img>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h1 class="greeting" ng-click="showLogin()">{{translation.SIGNIN_LABEL}}</h1>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h1 class="greeting" ng-click="showSignIn()">{{translation.SIGNUP_LABEL}}</h1>
+              </div>
+            </div>
+          </ion-item>
+
+          <ion-item ui-sref-active="active" class="item-icon-left" menu-close ui-sref="app.list">
+            <i class="menu-icon icon fa fa-th-list"></i>
+            <h2 class="menu-text">{{translation.LIST_LABEL}}</h2>
+          </ion-item>
+          <ion-item ui-sref-active="active" class="item-icon-left" menu-close ui-sref="app.compare">
+            <i class="menu-icon icon ion-person-stalker"></i>
+            <h2 class="menu-text">{{translation.COMPARE_LABEL}}</h2>
+          </ion-item>
+          <ion-item ui-sref-active="active" class="item-icon-left" menu-close ui-sref="app.view4">
+            <i class="menu-icon icon ion-ribbon-b"></i>
+            <h2 class="menu-text">{{translation.PRICES_LABEL}}</h2>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+    <div class="row menu-bottom-options">
+      <div class="col col-bottom">
+        <ion-list>
+          <ion-item ui-sref-active="active" class="item-icon-left" menu-close ui-sref="app.view5">
+            <i class="menu-icon icon ion-person-add"></i>
+            <h2 class="menu-text">Find Friends</h2>
+          </ion-item>
+          <ion-item ui-sref-active="active" class="item-icon-left" menu-close ui-sref="app.view6">
+            <i class="menu-icon icon ion-ios-settings-strong"></i>
+            <h2 class="menu-text">{{translation.SETTINGS_LABEL}}</h2>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>    
+
+
+
+
+        <!-- div style="background-color:#DDD">
+            <img src="img/ionic.png">
+            <h2>Venkman</h2>
+            <p>Back off, man. I'm a scientist.</p>
+        </div>
+      <ion-list id="main-menu">
+        <ion-item nav-clear menu-close ng-click="login()">
+            <span class="fa-stack fa-fw">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-sign-in fa-stack-1x"></i>
+            </span>
+            <span style="padding-left:20px">Entrar</span>
+        </ion-item>
+      <ion-list id="main-menu">
+        <ion-item nav-clear menu-close ng-click="logout()">
+            <span class="fa-stack fa-fw">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-sign-in fa-stack-1x"></i>
+            </span>
+            <span style="padding-left:20px">Sair</span>
+        </ion-item>
+        <ion-item nav-clear menu-close ui-sref="app.list" ui-sref-active="active">
+            <span class="fa-stack fa-fw">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa- fa-th-list fa-stack-1x"></i>
+            </span>
+          <span style="padding-left:20px">Listas</span>
+        </ion-item>
+        <ion-item nav-clear menu-close  ui-sref="app.compare" ui-sref-active="active">
+            <span class="fa-stack fa-fw">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa- fa-exchange fa-stack-1x"></i>
+            </span>
+          <span style="padding-left:20px">Comparar Preços</span>
+        </ion-item>
+      </ion-list -->
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
