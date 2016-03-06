@@ -558,8 +558,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
 
      
     $scope.add = function() {
-        var id = ($scope.productCollection.length > 0 ? $scope.productCollection.length - 1 : 0 );
-        $scope.product = {_id: id, name: '', price: '', unit: '', amount: '', measure: '', checked: false};
+        $scope.product = {_id: $scope.productCollection.length, name: '', price: '', unit: '', amount: '', measure: '', checked: false};
         $scope.oldData = {name : ''};
         $scope.editModal.show('templates/editProduct.html', $scope);
     }

@@ -55,6 +55,11 @@
 	"TOTAL_ITENS_LABEL" : "Total Itens",
 	"TOTAL_LIST_LABEL" : "Total Listas",
 	"CHECKED_PRODUCTS_LABEL" : "Produtos Marcados",
+	"CURRENCY_SIGN_LABEL" : "R$",
+	"CURRENCY_NAME_LABEL": "Real",
+	"CURRENCY_PLURANL_AME_LABEL": "Reais",
+	"CURRENCY_DECIMAL_STEP" : ",",
+	"CURRENCY_TOUSAND_STEP" : ".",
 
 	"ERROR_FIND_LOGIN_USER" : "Erro ao buscar os dados do usuário.",
 	"ERROR_LOGIN_USER_NOT_FOUND" : "usuario não encontrado.",

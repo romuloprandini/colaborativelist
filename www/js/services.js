@@ -14,7 +14,8 @@ var myModule = angular.module('carrinhofacil.services', [])
         
         var database_version = 1,
         db = new PouchDB('list'),
-        remote_db = new PouchDB('http://localhost:5984/list', {skipSetup: true} ),
+        //remote_db = new PouchDB('http://localhost:5984/list', {skipSetup: true} ),
+        remote_db = new PouchDB('http://romuloprandini.koding.io:5984/list', {skipSetup: true} ),
         db_configuration = PouchDB('configuration'),
         sync;
 

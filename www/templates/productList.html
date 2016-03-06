@@ -9,7 +9,7 @@
         <div class="content"  ng-class="{'has-header' : hasSearch}">
         <ion-list>
             <ion-item 
-            ng-repeat="product in list1=((productCollection | filterProductCollection:query) | orderProducts:order:revert | filter:{checked: false})" ng-hide="product.checked && hideChecked" class="product-item">
+            ng-repeat="product in list1=((productCollection | filter:query) | orderProducts:order:revert | filter:{checked: false})" ng-hide="product.checked && hideChecked" class="product-item">
                 <product />
             </ion-item>
             <ion-item ng-click="toogleChecked()" class="item-divider item-divider-products" ng-class="hideChecked? 'ion-arrow-down-b': 'ion-arrow-up-b'" ng-show="list2.length > 0">
@@ -18,7 +18,7 @@
                 </a>
             </ion-item>
             <ion-item 
-            ng-repeat="product in list2=((productCollection | filterProductCollection:query) | orderProducts:order:revert | filter:{checked: true})"  ng-hide="hideChecked" class="product-item">
+            ng-repeat="product in list2=((productCollection | filter:query) | orderProducts:order:revert | filter:{checked: true})"  ng-hide="hideChecked" class="product-item">
                 <product />
             </ion-item>
             <ion-item ng-show="list1.length < 1 && list2.length < 1">
@@ -30,7 +30,7 @@
     <div class="bar bar-footer bar-assertive">
         <div class="list-total">
             <div class="itens">{{translation.ITENS_LABEL}} <strong>{{productsTotal}}</strong></div>
-            <div class="price">{{translation.PRICE_LABEL}} <strong>{{priceTotal | currency}}</strong></div>
+            <div class="price">{{translation.PRICE_LABEL}} <strong>{{priceTotal | formatMoney:translation.CURRENCY_SIGN_LABEL:translation.CURRENCY_DECIMAL_STEP:translation.CURRENCY_TOUSAND_STEP}}</strong></div>
         </div>
     </div>
 </ion-view>
