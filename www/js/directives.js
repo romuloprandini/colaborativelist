@@ -1,4 +1,4 @@
-angular.module('carrinhofacil.directives', ['ionic'])
+angular.module('colaborativelist.directives', ['ionic'])
 
 .directive('scroll', function ($parse) {
     return function(scope, element, attrs) {
@@ -100,36 +100,6 @@ angular.module('carrinhofacil.directives', ['ionic'])
         templateUrl: 'templates/search.html'
     };
 }])
-.directive('preImg',function(){
-  return {
-    restrict:'E',
-    transclude:!0,
-    scope:{
-      ratio:'@',
-      helperClass:'@'
-    },
-    controller:['$scope',function(n){
-      n.loaded=!1,
-      this.hideSpinner=function(){
-        n.$apply(function(){
-          n.loaded=!0})
-      }}],
-      templateUrl:'templates/pre-img.html'}
-})
-.directive('spinnerOnLoad',function(){
-  return {
-    restrict:'A',
-    require:'^preImg',
-    scope:{
-      ngSrc:'@'
-    },
-    link:function(n,e,i,t){
-      e.on('load',function(){
-        t.hideSpinner()
-      })
-    }
-  }
-})
 .directive('product', function(){
   return {
     restrict:'E',

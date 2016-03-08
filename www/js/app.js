@@ -1,5 +1,5 @@
 
-angular.module('carrinhofacil', ['ionic','ngResource' ,'carrinhofacil.controllers'])
+angular.module('colaborativelist', ['ionic','ngResource', 'ngCordova' ,'colaborativelist.controllers'])
 .run(function ($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -11,17 +11,11 @@ angular.module('carrinhofacil', ['ionic','ngResource' ,'carrinhofacil.controller
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    if(window.plugins == null) {
-        window.plugins = {};
-    }
-    if(window.plugins.toast == null) {
-        window.plugins.toast = {showShortTop: function(texto) { alert(texto); }
-        };
-     }
   });
 })
 
 .config(function($stateProvider, $urlRouterProvider, $resourceProvider) {
+    
   $stateProvider
 
   .state('app', {

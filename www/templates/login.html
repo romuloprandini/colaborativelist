@@ -1,25 +1,10 @@
-<ion-modal-view>
-  <ion-header-bar>
-    <h1 class="title">{{translation.LOGIN_LABEL}}</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="closeLogin()">{{translation.CLOSE_LABEL}}</button>
-    </div>
-  </ion-header-bar>
-  <ion-content>
-    <form ng-submit="doLogin(data)">
-      <div class="list">
-        <label class="item item-input">
+<div style="margin-top:-10px">
+        <label class="item-stacked-label">
           <span class="input-label">{{translation.USER_LABEL}}</span>
-          <input type="text" ng-model="data.user">
+          <input type="text" ng-model="data.user" placeholder="{{translation.USER_LABEL}}" autofocus>
         </label>
-        <label class="item item-input">
+        <label class="item-stacked-label">
           <span class="input-label">{{translation.PASSWORD_LABEL}}</span>
-          <input type="password" ng-model="data.password">
+          <input type="password" ng-model="data.password" placeholder="{{translation.PASSWORD_LABEL}}">
         </label>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit">{{translation.SIGNIN_LABEL}}</button>
-        </label>
-      </div>
-    </form>
-  </ion-content>
-</ion-modal-view>
+</div>

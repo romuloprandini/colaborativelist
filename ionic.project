@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "Colaborative List",
   "app_id": "f00f044b",
   "gulpStartupTasks": [
     "sass",

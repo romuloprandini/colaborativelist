@@ -1,4 +1,3 @@
-
 .product-checked {
   color: #26a69a !important;
   width: 100%; }
@@ -147,4 +146,6 @@ ion-item + .no-items {
   border-right: 4px solid rgba(0, 0, 0, 0.26);
   border-bottom: 4px solid rgba(0, 0, 0, 0.26); }
 
-
+.avatar {
+    content:url("img/avatar.png");
+}

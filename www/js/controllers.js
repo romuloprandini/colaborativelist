@@ -1,6 +1,6 @@
-angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', 'carrinhofacil.services', 'carrinhofacil.directives'])
+angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filters', 'colaborativelist.services', 'colaborativelist.directives'])
 
-.controller('AppCtrl', function($scope, $state, $ionicModal,  $ionicLoading, $ionicScrollDelegate, $ionicPopover, $timeout, DatabaseService, TranslationService) {
+.controller('AppCtrl', function($scope, $state, $ionicModal,  $ionicLoading, $ionicScrollDelegate, $ionicPopover, $timeout, DatabaseService, TranslationService, $cordovaToast, $ionicPlatform, $ionicPopup) {
     $scope.databaseService = DatabaseService();
 
     TranslationService.getTranslation($scope, 'pt-br');
@@ -39,6 +39,31 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
     }
     $scope.loading = setLoading();
     
+    $scope.toast = {
+        showTop: function(message) {
+            $ionicPlatform.ready(function(){
+                try
+                {
+                    $cordovaToast.showShortTop(message);
+                }catch(err) {
+                    console.log(err);                
+                    alert(message);
+                };
+            });
+        },
+        showBottom: function(message) {
+            $ionicPlatform.ready(function(){
+                try
+                {
+                    $cordovaToast.showShortBottom(message);
+                }catch(err) {
+                    console.log(err);                
+                    alert(message);
+                };
+            });
+        }
+    }
+    
     /**
     *   Define the pop over structure and methods
     */
@@ -64,6 +89,16 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
         }
     }
     $scope.popover = setPopover();
+    
+    
+    function setPopup() {
+        return {
+            show: function show(options) {
+                $ionicPopup.show(options);
+            }
+        }
+    }
+    $scope.popup = setPopup();
     
     /**
     * Define the edit structure and methods
@@ -145,50 +180,42 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
     *   Show the login modal
     */
     $scope.showLogin = function() {
-        $scope.editModal.show('templates/login.html', $scope);
-    }
+        $scope.data = {};
+        var options = {
+                templateUrl: 'templates/login.html',
+                title: $scope.translation.LOGIN_LABEL,
+                scope: $scope,
+                buttons: [
+                  { text: $scope.translation.CANCEL_LABEL, },
+                  {
+                    text: '<b>'+$scope.translation.LOGIN_LABEL+'</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if($scope.data.user == '' || $scope.data.password == '') {
+                            e.preventDefault();
+                            $scope.toast.showBottom($scope.translation.FIELDS_REQUIRED);
+                        } else {
+                            $scope.loading.show($scope.translation.LOGING + ' ...');
 
-    /**
-    *   Close the login modal
-    */
-    $scope.closeLogin = function() {
-        $scope.editModal.hide();
-    }
-
-    /**
-    *   Login the user
-    */
-    $scope.doLogin = function(data) {
-        if(data.user == '' || data.password == '') {
-            window.plugins.toast.showShortTop($scope.translation.FIELDS_REQUIRED);
-            return;
-        }
-
-        $scope.loading.show($scope.translation.LOGING + ' ...');
-
-        $scope.databaseService.login(data.user, data.password).then(function(user) {
-            $scope.databaseService.getUser().then(function(user) {
-                $scope.user.set(user);
-                $scope.loading.hide();
-                $scope.editModal.hide();
-            }).catch(function(err) {
-                console.log(err);
-                
-                var message = $scope.translation.ERROR_FIND_LOGIN_USER;
-                if (err.name === 'not_found') {
-                  message = $scope.translation.ERROR_LOGIN_USER_NOT_FOUND;
-                }
-
-                $scope.loading.hide();
-                window.plugins.toast.showShortTop(mensage);
-            });
-        }).catch(function(err) {
-            console.log(err);
-
-            var message = $scope.translation.ERROR_INVALID_USERNAME_PASSWORD;
-            $scope.loading.hide();
-            window.plugins.toast.showShortTop(message);
-        });
+                            $scope.databaseService.user.login($scope.data.user, $scope.data.password).then(function(user) {
+                                $scope.user.set(user);
+                                $scope.loading.hide();
+                            }).catch(function(err) {
+                                console.log(err);
+                                var message = $scope.translation.ERROR_INVALID_USERNAME_PASSWORD;
+                                if (err.name === 'not_found') {
+                                  message = $scope.translation.ERROR_LOGIN_USER_NOT_FOUND;
+                                }
+                                $scope.loading.hide();
+                                $scope.toast.showBottom(message);
+                            });
+                            return {'ok': true};
+                        }
+                    }
+                  }
+                ]
+            }
+        $scope.popup.show(options);
     }
 
     /**
@@ -197,19 +224,19 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
     $scope.logout = function() {
         $scope.loading.show($scope.translation.LOGOUTING + ' ...');
             
-        $scope.databaseService.logout().then(function(){
+        $scope.databaseService.user.logout().then(function(){
             $scope.user.set();
             $scope.loading.hide();
         }).catch(function(err) {
             console.log(err);
             $scope.loading.hide();
-            window.plugins.toast.showShortTop($scope.translation.ERROR_LOGOUT);
+            $scope.toast.showBottom($scope.translation.ERROR_LOGOUT);
         });
     }
 })
 
-.controller('MainCtrl', function ($scope, $state, $ionicHistory) {
-    
+.controller('MainCtrl', function ($scope, $state, $ionicHistory, $ionicSideMenuDelegate) {
+    $ionicSideMenuDelegate.canDragContent(false);
     /**
     *   Execute after start function
     */
@@ -220,6 +247,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
         $ionicHistory.nextViewOptions({
             historyRoot: true
         });
+        $ionicSideMenuDelegate.canDragContent(true);
         $scope.configurated.set(true);
         $state.go('app.list');
     }
@@ -228,15 +256,32 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
     *   Execute after the configuration 
     */
     function onStart() {
-        $scope.databaseService.getUser().then(function(user) {
+        $scope.databaseService.user.getLogged().then(function(user) {
             if(user) {
                 $scope.user.set(user);
             }
             startComplete();
         }).catch(function(err) {
-            console.log(err);
-            window.plugins.toast.showShortTop($scope.translation.ERROR_LOGGED_USER_NOT_FOUND);
-            startComplete(); 
+            if(err.name == 'not_logged') {
+                $scope.databaseService.user.getStored().then(function(user) {
+                    if(user) {
+                        $scope.user.set(user);
+                    }
+                    startComplete(); 
+                }).catch(function(err) {
+                    if(err.name != 'not_stored' && !(err.name == 'not_found' && err.reason == 'deleted') ) {
+                        $scope.toast.showBottom($scope.translation.ERROR_FIND_LOGIN_USER);    
+                    }
+                    startComplete(); 
+                });   
+            } else {
+                console.log(err);
+                if(err.name == 'login_error') {
+                    $scope.toast.showBottom($scope.translation.ERROR_LOGGED_USER_NOT_FOUND);
+                }
+                startComplete(); 
+            }
+            
         });
     }
 
@@ -270,7 +315,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
             $scope.listCollection = list;
             $scope.loading.hide();
         }).catch(function (mensage) {
-            window.plugins.toast.showShortTop(mensage);
+            $scope.toast.showBottom(mensage);
             $scope.loading.hide();
         });
     }
@@ -317,7 +362,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
         $scope.listService.remove(list._id).then(function (result) {
             if (result) {
                 $scope.listCollection.splice(indexOf, 1);
-                window.plugins.toast.showShortTop($scope.translation.DELETED_LIST.replace('LIST_NAME', list.name));
+                $scope.toast.showBottom($scope.translation.DELETED_LIST.replace('LIST_NAME', list.name));
             }
         }).catch(function (err) {
             var message;
@@ -330,7 +375,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
                 console.log(err);
             }
 
-            window.plugins.toast.showShortTop(message);
+            $scope.toast.showBottom(message);
         });
         
     }
@@ -349,7 +394,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
                 $scope.listCollection.splice(index, 1);
             } 
             $scope.listCollection.push(newList);
-            window.plugins.toast.showShortTop($scope.translation.LIST_SAVE_SUCCESSFUL);
+            $scope.toast.showBottom($scope.translation.LIST_SAVE_SUCCESSFUL);
             $scope.editModal.hide();
             $scope.list = null;
         }).catch(function (err){
@@ -365,7 +410,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
                 console.log(err);
             }
 
-            window.plugins.toast.showShortTop(message);
+            $scope.toast.showBottom(message);
         });
     }
 
@@ -376,12 +421,12 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
         $scope.listService.save($scope.list).then(function(ok) {
             if(ok) {
                 $scope.popover.hide();
-                window.plugins.toast.showShortTop($scope.translation.LIST_SYNC_SUCCESSFUL);  
+                $scope.toast.showBottom($scope.translation.LIST_SYNC_SUCCESSFUL);  
             }
         }).catch(function (err){
             console.log(err);
             
-            window.plugins.toast.showShortTop($scope.translation.LIST_SYNC_FAIL);
+            $scope.toast.showBottom($scope.translation.LIST_SYNC_FAIL);
         });
 
     }
@@ -445,7 +490,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
         if ($location.path().indexOf('/app/list/') == -1 || !$scope.configurated.get()) return;
 
         if($state.params.id === undefined || ($state.params.id !== undefined && $state.params.id < 1)) {
-            window.plugins.toast.showShortTop($scope.translation.INVALID_LIST);
+            $scope.toast.showBottom($scope.translation.INVALID_LIST);
             $state.go('app.list');
             return;
         }
@@ -459,7 +504,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
             updatePriceTotal();
             $scope.loading.hide();
         }).catch(function (mensage){
-            window.plugins.toast.showShortTop(mensage);
+            $scope.toast.showBottom(mensage);
         });
     }
     
@@ -525,7 +570,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
                 console.log(err);
             }
 
-            window.plugins.toast.showShortTop(message);
+            $scope.toast.showBottom(message);
         });
     }
     
@@ -539,7 +584,7 @@ angular.module('carrinhofacil.controllers', ['ionic', 'carrinhofacil.filters', '
         $scope.productService.remove(product.name).then(function () {
             var indexOf = $scope.productCollection.indexOf(product);
             $scope.productCollection.splice(indexOf, 1);
-            window.plugins.toast.showShortTop($scope.translation.DELETED_PRODUCT.replace('PRODUCT_NAME', product.name));
+            $scope.toast.showBottom($scope.translation.DELETED_PRODUCT.replace('PRODUCT_NAME', product.name));
             updateProductsTotal();
             updatePriceTotal();
         }).catch(function(err){

@@ -119,7 +119,7 @@ ion-spinner.spinner-on-load {
     text-align: center;
 
 }
-.menu-outer .heading-item.colored {
+.menu-outer .heading-item-colored {
     border-bottom: 5px  solid rgba(228,227,227,0.4);
     background: -moz-linear-gradient(60deg, rgba(125,227,222,1) 0%, rgba(39,176,162,1) 52%, rgba(16,105,96,1) 100%); /* ff3.6+ */
     background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(125,227,222,1)), color-stop(52%, rgba(39,176,162,1)), color-stop(100%, rgba(16,105,96,1))); /* safari4+,chrome */

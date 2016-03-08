@@ -21,10 +21,10 @@
               <div class="col">
                 <!-- We need a wrapper with width set for the preload image directive -->
                 <div class="user-image-outer">
-                  <pre-img ratio="_1_1" helper-class="rounded-image">
-                    <img class="user-image" ng-if="user.get().avatar != ''" ng-src="{{user.get().avatar}}" spinner-on-load>
-                    <img class="user-image" ng-if="user.get().avatar == ''" ng-src="../img/avatar.png" spinner-on-load>
-                  </pre-img>
+                    <div class="pre-img _1_1 rounded-image finish-loading">
+                        <img class="user-image" ng-if="user.get().avatar != ''" ng-src="{{user.get().avatar}}">
+                        <img class="user-image" ng-if="user.get().avatar == ''" src="img/avatar.png">
+                    </div>
                 </div>
               </div>
             </div>
@@ -45,20 +45,27 @@
               <div class="col">
                 <!-- We need a wrapper with width set for the preload image directive -->
                 <div class="user-image-outer">
-                  <pre-img ratio="_1_1" helper-class="rounded-image">
-                    <img class="user-image" ng-src="../img/avatar.png" spinner-on-load>
-                  </pre-img>
+                    <div class="pre-img _1_1 rounded-image finish-loading">
+                    <img class="user-image" src="img/avatar.png" spinner-on-load>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col">
-                <h1 class="greeting" ng-click="showLogin()">{{translation.SIGNIN_LABEL}}</h1>
+                <button class="button button-block button-small button-positive" ng-click="showLogin()">{{translation.SIGNIN_LABEL}}</button>
               </div>
             </div>
             <div class="row">
               <div class="col">
-                <h1 class="greeting" ng-click="showSignIn()">{{translation.SIGNUP_LABEL}}</h1>
+                  <div class="horizontal-line">
+                      <span>{{translation.OR_LABEL}}</span>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <button class="button button-block button-small button-assertive" ng-click="showSignIn()">{{translation.SIGNUP_LABEL}}</button>
               </div>
             </div>
           </ion-item>

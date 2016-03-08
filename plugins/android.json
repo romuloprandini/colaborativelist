@@ -8,22 +8,22 @@
     },
     "installed_plugins": {
         "cordova-plugin-console": {
-            "PACKAGE_NAME": "br.com.carrinhofacil.listacompras"
+            "PACKAGE_NAME": "org.colaborativelist"
         },
         "cordova-plugin-device": {
-            "PACKAGE_NAME": "br.com.carrinhofacil.listacompras"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "br.com.carrinhofacil.listacompras"
+            "PACKAGE_NAME": "org.colaborativelist"
         },
         "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "br.com.carrinhofacil.listacompras"
+            "PACKAGE_NAME": "org.colaborativelist"
         },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "br.com.carrinhofacil.listacompras"
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "org.colaborativelist"
         },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "br.com.carrinhofacil.listacompras"
+            "PACKAGE_NAME": "org.colaborativelist"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "org.colaborativelist"
         }
     },
     "dependent_plugins": {}

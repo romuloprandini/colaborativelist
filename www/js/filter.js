@@ -1,4 +1,4 @@
-angular.module('carrinhofacil.filters', [])
+angular.module('colaborativelist.filters', [])
 
 .filter('getById', function() {
   return function(input, id) {

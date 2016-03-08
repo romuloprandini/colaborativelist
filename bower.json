@@ -1,10 +1,11 @@
 {
-  "name": "Lista de Compras",
+  "name": "Colaborative List",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.1.1"
+    "ionic": "driftyco/ionic-bower#1.2.4"
   },
   "dependencies": {
-    "pouchdb": "~5.0.0"
+    "pouchdb": "~5.0.0",
+    "ngCordova": "^0.1.24-alpha"
   }
 }

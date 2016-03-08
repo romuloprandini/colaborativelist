@@ -1,3 +1,7 @@
+/**
+Side Menu 
+**/
+
 .pre-img._1_1 {
     width: 100%;
     padding-bottom: 100%
@@ -84,13 +88,11 @@ ion-spinner.spinner-on-load {
 }
 .menu-outer {
     background-color: #f1f1f1;
-    */
 }
 .menu-outer ion-item {
     background: 0 0;
     border: none;
     border-bottom: 1px solid rgba(84,83,83,0.2);
-    /*color: rgba(241, 241, 241, .8)*/
 }
 .menu-outer ion-item .item-content {
     background: 0 0
@@ -107,13 +109,17 @@ ion-spinner.spinner-on-load {
     background-color: rgba(5, 4, 3, .1)!important
 }
 .menu-outer ion-item .menu-icon {
-    font-size: 22px
+    font-size: 22px;
+    margin-top: 2px;
 }
 .menu-outer ion-item .menu-text {
     margin-left: -5px
 }
 .menu-outer .heading-item {
     text-align: center;
+
+}
+.menu-outer .heading-item.colored {
     border-bottom: 5px  solid rgba(228,227,227,0.4);
     background: -moz-linear-gradient(60deg, rgba(125,227,222,1) 0%, rgba(39,176,162,1) 52%, rgba(16,105,96,1) 100%); /* ff3.6+ */
     background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(125,227,222,1)), color-stop(52%, rgba(39,176,162,1)), color-stop(100%, rgba(16,105,96,1))); /* safari4+,chrome */
@@ -144,7 +150,7 @@ ion-spinner.spinner-on-load {
 }
 .menu-outer .heading-item .greeting {
     color: #242424;
-    font-size: 22px;
+    font-size: 18px;
     margin: 0;
     font-weight: 400;
     font-family: sans-serif;

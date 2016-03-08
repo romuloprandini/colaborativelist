@@ -60,6 +60,7 @@
 	"CURRENCY_PLURANL_AME_LABEL": "Reais",
 	"CURRENCY_DECIMAL_STEP" : ",",
 	"CURRENCY_TOUSAND_STEP" : ".",
+	"OR_LABEL": "Ou",
 
 	"ERROR_FIND_LOGIN_USER" : "Erro ao buscar os dados do usuário.",
 	"ERROR_LOGIN_USER_NOT_FOUND" : "usuario não encontrado.",

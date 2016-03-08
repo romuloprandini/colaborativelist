@@ -1,4 +1,4 @@
-var myModule = angular.module('carrinhofacil.services', [])
+var myModule = angular.module('colaborativelist.services', [])
 .service('TranslationService', ['$resource', function($resource) {  
     this.getTranslation = function($scope, language) {
         var languageFilePath = 'js/translations/translation_' + language + '.json';
@@ -21,10 +21,14 @@ var myModule = angular.module('carrinhofacil.services', [])
 
         return {
             configure: configure,
-            login: login,
-            logout: logout,
             syncronize: syncronize,
-            getUser: getUser,
+            user: {
+                get: getUser,
+                getLogged: getUserLogged,
+                getStored: getUserStored,
+                login: login,
+                logout: logout
+            },
 
             list: list,
             get: get,
@@ -102,24 +106,66 @@ var myModule = angular.module('carrinhofacil.services', [])
                 return setConfigurations();
             });
         }
-
-        function getUser() {
-            if(remote_db !== undefined) {
-                return remote_db.getSession().then(function(response) {
-                    if(!response.userCtx.name) {
-                        return false;
+        
+        function getUser(user) {
+            return remote_db.getUser(user).then(function(response) {
+               return response;
+            });
+        }
+        
+        function getUserLogged() {
+                return remote_db.getSession().then(function(doc) {
+                    if(doc.ok && doc.userCtx.name != undefined) {
+                        return getUser(doc.userCtx.name);
                     }
-                    return remote_db.getUser(response.userCtx.name).then(function(response) {
-                       return response; 
-                    })
+                    return $q.reject({'name': 'not_logged', 'message': 'No user is logged in.'});
                 });
-            }
-            return $q.reject({'name': 'cannot_retrieve', 'message': 'Cannot retrieve user data.'});
+        }
+        
+        function getUserStored() {
+                return db_configuration.get('user').then(function(doc) {
+                    if(doc.username != '' && doc.password != '') {
+                        return remote_db.login(doc.username, doc.password).then(function(response) {
+                            return getUser(response.name);
+                        });
+                    }
+                }).catch(function(err) {
+                    if(err.name == 'not_found') {
+                        return $q.reject({'name': 'not_stored', 'message': 'No user is stored.'});
+                    }
+                    else {
+                        return err;
+                    }
+                });
+            return $q.reject({'name': 'not_stored', 'message': 'No user is stored.'});
+        }
+        
+        function persistUser(username, password) {
+            var userData = {'_id':'user', 'username': username, 'password': password};
+            return db_configuration.get('user').then(function(doc) {
+                userData._rev= doc._rev;
+                return db_configuration.put(userData).then(function(doc) {
+                    return {'ok' : true};
+                });                
+            }).catch(function(err) {
+                if(err.name == 'not_found') {
+                    return db_configuration.put(userData).then(function(doc) {
+                        return {'ok' : true};
+                    }); 
+                }
+                return {'ok' : false, 'error': err};
+            });
         }
 
         function login(username, password) {
             return remote_db.login(username, password).then(function (login) {
-                return login;
+                return persistUser(username, password).then(function(doc) {
+                    if(doc.ok) {
+                        return getUser(username);
+                    } else {
+                        return Error({'name': 'login_error', 'message': 'Error on login the user.'});
+                    }
+                });
             });
         }
 
@@ -131,7 +177,9 @@ var myModule = angular.module('carrinhofacil.services', [])
                 if (err) {
                     throw err;
                 }
-                return true;
+                return persistUser('','').then(function(doc) {
+                    return doc;
+                });
             });
         }
 
@@ -148,27 +196,10 @@ var myModule = angular.module('carrinhofacil.services', [])
                 sync = db.sync(remote_db, {live: true, retry: true, filter: 'filter/by_user', query_params: {'user' : user}});
                 onChangeCallback();
 
-                db.changes({
-                  live: true,
-                  include_docs: true}).then(function(changes) {
-                    console.log('changes', changes);
-                });
-
                 sync.on('change', function (info) {
                     if(onChangeCallback !== undefined && info.direction == 'pull') {
                         onChangeCallback(info);
                     }
-                  console.log('On change: ', info);
-                }).on('paused', function () {
-                  console.log('pausou ');
-                }).on('active', function () {
-                  console.log('voltou online');
-                }).on('denied', function (info) {
-                  console.log('On denied: ', info);
-                }).on('complete', function (info) {
-                  console.log('On cancel sync: ', info);
-                }).on('error', function (err) {
-                  console.log('On error: ', err);
                 });
 
             }).catch(function(err){
@@ -336,7 +367,7 @@ var myModule = angular.module('carrinhofacil.services', [])
                 //Insert
                 } else {
                     return db.save(obj).then(function (doc) {
-                        return setList(obj._id, obj.name, 0, obj.user);
+                        return setList(doc.id, obj.name, 0, obj.user);
                     });
                 }
             });
