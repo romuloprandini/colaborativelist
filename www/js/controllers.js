@@ -557,7 +557,8 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
 
             updateProductsTotal();
             updatePriceTotal();
-        }, function (err) {
+            return {ok :true};
+        }).catch(function (err) {
             var message;
             if(err.name === 'invalid_product') {
                 message = $scope.translation.ERROR_INVALID_PRODUCT;
@@ -571,6 +572,7 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
             }
 
             $scope.toast.showBottom(message);
+            return {ok :false, error: message};
         });
     }
     
@@ -608,9 +610,11 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
         $scope.editModal.show('templates/editProduct.html', $scope);
     }
     
-    $scope.save = function () {
-        save().then(function () {
-            $scope.editModal.hide();
+    $scope.doSave = function () {
+        save().then(function (doc) {
+            if(doc.ok) {
+                $scope.editModal.hide();
+            }
         });
     }
     

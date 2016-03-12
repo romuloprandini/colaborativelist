@@ -440,9 +440,9 @@ var myModule = angular.module('colaborativelist.services', [])
         function save(newProduct) {
             
             if(newProduct === undefined) {
-                throw Error({'name': 'invalid_product', 'message': 'Inválid product!'});
-            } else if (newProduct.name === undefined) {
-                throw Error({'name': 'inform_product', 'message': 'Informe the product name!'});
+                return $q.reject({'name': 'invalid_product', 'message': 'Inválid product!'});
+            } else if (newProduct.name === undefined || newProduct.name.trim() == '') {
+                return $q.reject({'name': 'product_name', 'message': 'Informe the product name!'});
             } else {
 
                 var options = {key : list_id}
