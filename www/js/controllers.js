@@ -92,9 +92,13 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
     
     
     function setPopup() {
+        var popup;
         return {
             show: function show(options) {
-                $ionicPopup.show(options);
+                popup = $ionicPopup.show(options);
+            },
+            hide: function() {
+                popup.close();
             }
         }
     }
@@ -177,6 +181,36 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
     $scope.hideNavBar = setHideNavBar();
 
     /**
+    *   login the user
+    */
+    function onLogin() {
+        if($scope.data.user == '' || $scope.data.password == '') {
+            $scope.toast.showBottom($scope.translation.FIELDS_REQUIRED);
+            return false;
+        } else {
+            $scope.loading.show($scope.translation.LOGING + ' ...');
+
+            $scope.databaseService.user.login($scope.data.user, $scope.data.password).then(function(user) {
+                $scope.databaseService.replicate(user.name, function(info) {
+                    $scope.user.set(user);
+                    $scope.loading.hide();        
+                });
+                
+            }).catch(function(err) {
+                console.log(err);
+                var message = $scope.translation.ERROR_INVALID_USERNAME_PASSWORD;
+                if (err.name === 'not_found') {
+                  message = $scope.translation.ERROR_LOGIN_USER_NOT_FOUND;
+                }
+                $scope.loading.hide();
+                $scope.toast.showBottom(message);
+            });
+            return true;
+        }
+        
+    }
+    
+    /**
     *   Show the login modal
     */
     $scope.showLogin = function() {
@@ -191,25 +225,8 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
                     text: '<b>'+$scope.translation.LOGIN_LABEL+'</b>',
                     type: 'button-positive',
                     onTap: function(e) {
-                        if($scope.data.user == '' || $scope.data.password == '') {
+                        if(!onLogin()) {
                             e.preventDefault();
-                            $scope.toast.showBottom($scope.translation.FIELDS_REQUIRED);
-                        } else {
-                            $scope.loading.show($scope.translation.LOGING + ' ...');
-
-                            $scope.databaseService.user.login($scope.data.user, $scope.data.password).then(function(user) {
-                                $scope.user.set(user);
-                                $scope.loading.hide();
-                            }).catch(function(err) {
-                                console.log(err);
-                                var message = $scope.translation.ERROR_INVALID_USERNAME_PASSWORD;
-                                if (err.name === 'not_found') {
-                                  message = $scope.translation.ERROR_LOGIN_USER_NOT_FOUND;
-                                }
-                                $scope.loading.hide();
-                                $scope.toast.showBottom(message);
-                            });
-                            return {'ok': true};
                         }
                     }
                   }
@@ -331,14 +348,69 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
     *   Close the modal
     */
     $scope.oldData;
-    $scope.closeModal = function() {
-        if ($scope.oldData !== undefined)
-        {
-            angular.copy($scope.oldData, $scope.list);
-            $scope.oldData = null;
-        }
-        $scope.editModal.hide();
-    };
+    function showPopupList() {
+        var options = {
+                templateUrl: 'templates/editList.html',
+                title: $scope.translation.LIST_LABEL,
+                scope: $scope,
+                buttons: [
+                  { text: $scope.translation.CANCEL_LABEL, 
+                    onTap: function() {
+                      if ($scope.oldData !== undefined)
+                      {
+                         angular.copy($scope.oldData, $scope.list);
+                         $scope.oldData = null;
+                      }
+                    }
+                  },
+                  {
+                    text: '<b>'+$scope.translation.SAVE_LABEL+'</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        e.preventDefault();
+                        if($scope.list._id == 0) {
+                                $scope.list.user = $scope.user.id();
+                        }
+                        $scope.listService.save($scope.list).then(function (newList) {
+                            var list = $filter('getById')($scope.listCollection, newList._id);
+                            if (list != null) {
+                                var index = $scope.listCollection.indexOf(list);
+                                $scope.listCollection.splice(index, 1);
+                            } 
+                            $scope.listCollection.push(newList);
+                            $scope.toast.showBottom($scope.translation.LIST_SAVE_SUCCESSFUL);
+                            $scope.list = null;
+                            $scope.popup.hide();
+                        }).catch(function (err){
+                            var message;
+                            if(err.name === 'invalid_list') {
+                                message = $scope.translation.ERROR_INVALID_LIST;
+                            } else if(err.name === 'list_name') {
+                                message = $scope.translation.ERROR_LIST_NAME_REQUIRED;
+                            } else if(err.name === 'duplicated_list') {
+                                message = $scope.translation.ERROR_DUPLICATED_LIST;
+                            } else {
+                                message = $scope.translation.ERROR_SAVE_LIST;
+                                console.log(err);
+                            }
+
+                            $scope.toast.showBottom(message);
+                        });
+                    }
+                  }
+                ]
+            }
+        $scope.popup.show(options);
+    }
+    /**
+    *   Show the add form 
+    */
+    $scope.add = function() {
+        $scope.list = {_id: 0, name: '', productsTotal: 0};
+        //$scope.editModal.show('templates/editList.html', $scope);
+        $scope.popover.hide();
+        showPopupList();
+    }
 
     /**
     *   Show the edit form and manager the old data
@@ -346,8 +418,14 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
     function edit(id) {
         $scope.list =  $filter('getById')($scope.listCollection, id);
         $scope.oldData = angular.copy($scope.list);
+        $scope.popover.hide();
+        showPopupList();
+        
+        /*$scope.list =  $filter('getById')($scope.listCollection, id);
+        $scope.oldData = angular.copy($scope.list);
         $scope.editModal.show('templates/editList.html', $scope);
         $scope.popover.hide();
+        */
     }
     /**
     *   Exclude a list and update the list collection
@@ -431,14 +509,6 @@ angular.module('colaborativelist.controllers', ['ionic', 'colaborativelist.filte
 
     }
     
-    /**
-    *   Show the add form 
-    */
-    $scope.add = function() {
-        $scope.list = {_id: 0, name: '', productsTotal: 0};
-        $scope.editModal.show('templates/editList.html', $scope);
-    }
-
     $scope.isGuest = function(list) {
         return (list.user == 'guest')
     }

@@ -14,13 +14,13 @@ var myModule = angular.module('colaborativelist.services', [])
         
         var database_version = 1,
         db = new PouchDB('list'),
-        //remote_db = new PouchDB('http://localhost:5984/list', {skipSetup: true} ),
-        remote_db = new PouchDB('http://romuloprandini.koding.io:5984/list', {skipSetup: true} ),
+        remote_db = new PouchDB('http://localhost:5984/list', {skipSetup: true} ),
         db_configuration = PouchDB('configuration'),
         sync;
 
         return {
             configure: configure,
+            replicate: replicate,
             syncronize: syncronize,
             user: {
                 get: getUser,
@@ -182,6 +182,20 @@ var myModule = angular.module('colaborativelist.services', [])
                 });
             });
         }
+        
+        function replicate(user, onCompleteCallback) {
+            //Verify if remote database exists
+            remote_db.info().then(function(info){
+                console.log('database info', info);
+                replicate = PouchDB.replicate('http://5.189.136.64:5984/list', 'list', {filter: 'filter/by_user', query_params: {'user' : user}});
+                replicate.on('complete', function (info) {
+                    if(onCompleteCallback !== undefined) {
+                        onCompleteCallback(info);
+                    }
+                });
+
+            });            
+        }
 
         function syncronize(user, onChangeCallback) {
             if(onChangeCallback == 'cancel' && sync !== undefined) {
@@ -189,11 +203,10 @@ var myModule = angular.module('colaborativelist.services', [])
                 sync = null;
                 return;
             }
-
+            
             //Verify if remote database exists
             remote_db.info().then(function(info){
-                console.log('database info', info);
-                sync = db.sync(remote_db, {live: true, retry: true, filter: 'filter/by_user', query_params: {'user' : user}});
+                sync = db.sync(remote_db, {live: true, retry: true, filter: 'filter/by_user', query_params: {'user' : user}}); 
                 onChangeCallback();
 
                 sync.on('change', function (info) {
@@ -205,7 +218,7 @@ var myModule = angular.module('colaborativelist.services', [])
             }).catch(function(err){
                 console.log('database error', err);
                 $timeout(function() {
-                    syncronize(onChangeCallback);
+                    syncronize(user, onChangeCallback);
                 }, 60000);
             });
         }
