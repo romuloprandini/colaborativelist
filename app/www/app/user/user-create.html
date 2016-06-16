@@ -1,0 +1,68 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">{{vm.translation.SIGNUP_LABEL}}</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="vm.close()">{{vm.translation.CLOSE_LABEL}}</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+      <form name="form" novalidate="" ng-submit="vm.create()">
+      <div class="list">
+        <label class="item item-input item-floating-label only-border-bottom" focus-me ng-class="{ 'has-errors' : !form.username.$pristine&&form.username.$invalid, 'no-errors' : form.username.$valid}">
+          <span class="input-label">{{vm.translation.USERNAME_LABEL}}</span>
+          <input type="text" name="username" ng-model="vm.newUser.username" placeholder="{{vm.translation.USERNAME_LABEL}}" autocorrect="off" autocapitalize="none" autofocus onkeyup="this.value = this.value.replace(/\s/g, '')" onblur="this.value = this.value.replace(/\s/g, '')" ng-required="true" maxlength="15" minlength="5" ng-maxlength="15" ng-minlength="5">
+        </label>
+        <div class="error-container" ng-show="!form.username.$pristine&&form.username.$invalid">
+            <div class="error" ng-show="form.username.$error.required">
+                {{vm.translation.USERNAME_REQUIRED}}
+            </div>
+            <div class="error" ng-show="form.username.$error.minlength||form.username.$error.maxlength">
+                {{vm.translation.USERNAME_LENGTH}}
+            </div>
+        </div>
+        <label class="item item-input item-floating-label only-border-bottom" ng-class="{ 'has-errors' :!form.password.$pristine&&form.password.$invalid, 'no-errors' : form.password.$valid}">
+          <span class="input-label">{{vm.translation.PASSWORD_LABEL}}</span>
+          <input type="password" name="password" ng-model="vm.newUser.password" placeholder="{{vm.translation.PASSWORD_LABEL}}"  ng-required="true" maxlength="25" minlength="8" ng-minlength="8">
+        </label>
+        <div class="error-container" ng-show="!form.password.$pristine&&form.password.$invalid">
+            <div class="error" ng-show="form.password.$error.required">
+                {{vm.translation.PASSWORD_REQUIRED}}
+            </div>
+            <div class="error" ng-show="form.password.$error.minlength">
+                {{vm.translation.PASSWORD_WEAK}}
+            </div>
+        </div>
+        <label class="item item-input item-floating-label only-border-bottom" ng-class="{ 'has-errors' : !form.fullname.$pristine&&form.fullname.$invalid, 'no-errors' : form.fullname.$valid}">
+          <span class="input-label">{{vm.translation.FULLNAME_LABEL}}</span>
+          <input type="text" name="fullname" ng-model="vm.newUser.fullName" placeholder="{{vm.translation.FULLNAME_LABEL}}" ng-required="true" maxlength="50" minlength="5" ng-minlength="5">
+        </label>
+        <div class="error-container" ng-show="!form.fullname.$pristine&&form.fullname.$invalid">
+            <div class="error" ng-show="form.fullname.$error.required">
+                {{vm.translation.FULLNAME_REQUIRED}}
+            </div>
+            <div class="error" ng-show="form.fullname.$error.minlength">
+                {{vm.translation.FULLNAME_LENGTH}}
+            </div>
+        </div>
+        <label class="item item-input item-floating-label only-border-bottom" ng-class="{ 'has-errors' : !form.email.$pristine&&form.email.$invalid, 'no-errors' : form.email.$valid}">
+          <span class="input-label">{{vm.translation.EMAIL_LABEL}}</span>
+          <input name="email" type="email" ng-model="vm.newUser.email" placeholder="{{vm.translation.EMAIL_LABEL}}" ng-required="true" maxlength="50" minlength="5" ng-minlength="5">
+        </label>
+        <div class="error-container" ng-show="!form.email.$pristine&&form.email.$invalid">
+            <div class="error" ng-show="form.email.$error.required">
+                {{vm.translation.EMAIL_REQUIRED}}
+            </div>
+            <div class="error" ng-show="form.email.$error.minlength">
+                {{vm.translation.EMAIL_LENGTH}}
+            </div>
+            <div class="error" ng-show="form.email.$error.email">
+                {{vm.translation.EMAIL_MALFORMED}}
+            </div>
+        </div>
+        <label class="item only-border-bottom">
+          <button class="button button-block button-positive" type="submit">{{vm.translation.SIGNUP_LABEL}}</button>
+        </label>
+      </div>
+      </form>
+  </ion-content>
+</ion-modal-view>

@@ -1,0 +1,48 @@
+<ion-view view-title="{{vm.translation.LIST_SHARE_LABEL}}">
+    <ion-header-bar class="item-input-inset bar-stable bar-subheader">
+        <div class="item-input-wrapper">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="search" id="searchField" placeholder="{{vm.translation.SEARCH_LABEL}}" ng-model="vm.search" ng-change="vm.onChange()" ng-focus="vm.onChange()">
+                <i class="clear-search icon ion-close-circled" ng-click="vm.clear()"></i>
+        </div>
+        <button class="button button-small button-clear" ng-class="vm.getPermissionIcon(vm.permission)" ng-click="vm.changePermission($event)"><i class="dropdown-icon icon ion-arrow-down-b"></i></button>
+    </ion-header-bar>
+    <ion-content>
+        <div class="items typehead" ng-hide="vm.search.length < 3 || vm.selected">
+            <div class="item"  ng-show="vm.loading" style="text-align:center">
+                <ion-spinner icon="lines"></ion-spinner>
+            </div>
+            <div class="item" ng-show="!vm.loading && vm.items.length < 1">
+                {{vm.translation.NO_RECORDS_FOUND}}
+            </div>
+            <div class="item item-avatar" ng-repeat="item in vm.items track by $index" ng-click="vm.onSelectUser(item)" ng-hide="vm.loading">
+                <img ng-src="{{(item.avatar != undefined && item.avatar != '') && item.avatar || 'img/avatar.png'}}">
+                <h2>{{item.fullname}}</h2>
+                <p style="font-size:smaller">{{item.email}}</p>
+            </div>
+        </div>
+        <div>
+        </div>
+        <ion-list> 
+            <ion-item class=" item-divider">
+                <h2>{{vm.translation.WHO_CAN_ACCESS_LABEL}}</h2>
+            </ion-item>
+        </ion-list> 
+        <ion-list> 
+            <ion-item class="item-button-right"  ng-repeat="user in vm.userList track by $index">
+                
+                <h2>{{user.name}}</h2>
+                <span ng-hide="vm.isCurrectUser(user.name)" class="badge badge-light" ng-click="vm.changePermission($event, $index)"><i class="icon" ng-class="vm.getPermissionIcon(user.permission)"></i><i class="dropdown-icon icon ion-arrow-down-b"></i></span>
+                <button ng-show="vm.isCurrectUser(user.name)" class="button button-clear item-note">(você)</span>
+                <button ng-hide="vm.isCurrectUser(user.name)" class="button button-icon icon ion-trash-a" ng-click="vm.remove($index)"></button>
+            </ion-item>
+            <ion-item class="no-items">
+                {{vm.translation.NO_RECORDS_FOUND}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+    
+    <ion-footer-bar align-title="center" class="bar-balanced">
+  <h1 class="title"><button class="button button-footer" ng-click="vm.save()">{{vm.translation.SAVE_LABEL}}</button></h1>
+    </ion-footer-bar>
+</ion-view>
