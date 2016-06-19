@@ -25,7 +25,10 @@ angular
                 userData.get().then(function(user) {
                     console.log("pegou usuario");
                     $rootScope.username = data.name;
-                    navigator.splashscreen.hide();
+                }).finally(function() {
+                    console.log("removeu o splashscreen");
+                    if(navigator.splashscreen)
+                        navigator.splashscreen.hide();
                 });
             });
             

@@ -89,7 +89,7 @@
                     vm.user = user;
                     common.popup.hide();
                     $ionicSideMenuDelegate.toggleLeft();
-                    $state.go('app', {}, {'location': 'replace'});
+                    $state.go('app', {}, {'location': 'true'});
                 })
                 .finally(function() {
                     common.loading.hide();
@@ -105,7 +105,7 @@
                 $scope.user = user;
                 vm.user = user;
                 $ionicSideMenuDelegate.toggleLeft();
-                $state.go('app', {}, {'location': 'replace'});
+                $state.go('app', {}, {'location': 'true'});
             })
             .finally(function() {
                 common.loading.hide();
