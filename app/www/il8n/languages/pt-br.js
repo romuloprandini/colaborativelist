@@ -22,6 +22,7 @@
     USERNAME_LABEL : "Nome de Usuário",
     FULLNAME_LABEL : "Nome Completo",
 	PASSWORD_LABEL : "Senha",
+	PASSWORD_CONFIRM_LABEL : "Confirmar Senha",
 	SIGNIN_LABEL : "Entrar",
 	SIGNUP_LABEL : "Cadastrar",
     EMAIL_LABEL : "Email",
@@ -36,6 +37,7 @@
     USERNAME_LENGTH : "O usuário deve ter no mínimo 5 e no máximo 15 caracteres!",
     PASSWORD_REQUIRED : "A senha é obrigatória!",
     PASSWORD_WEAK : "A senha deve ter no mínimo 8 caracteres!",
+    PASSWORD_NOT_EQUALS : "As senhas não coincidem!",
     FULLNAME_REQUIRED : "O nome é obrigatório!",
     FULLNAME_LENGTH : "O nome deve ter no mínimo 5 caracteres!",
     EMAIL_REQUIRED : "O email é obrigatório!",
@@ -48,6 +50,7 @@
 	LOGOUT_ERROR : "Não foi possível desconectar o usuário.",
 	LOGGED_USER_NOT_FOUND_ERROR : "Não foi possível localizar o usuário logado.",
 	SIGNUP_ERROR : "Erro ao criar o usuário.",
+	USER_ALREADY_EXISTS_ERROR : "Já existe um usuário com esse nome.",
     //SUCCESS
 	SIGNUP_SUCCESS : "Usuário USERNAME cadastrado com sucesso!",
         

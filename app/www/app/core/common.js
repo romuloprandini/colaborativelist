@@ -35,7 +35,7 @@
                 } else if(type == 'warning') {
                     toastr.warning(message, title);
                 } else if(type == 'success') {
-                    toastr.error(message, title);
+                    toastr.success(message, title);
                 } else {
                     toastr.info(message, title);
                 } 

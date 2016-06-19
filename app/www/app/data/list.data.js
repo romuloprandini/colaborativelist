@@ -119,6 +119,8 @@
                 if(list._id !== undefined && list._id != 0) {
                     return getList(list._id).then(function(data){
                         data.name = list.name;
+                        data.productList = list.productList;
+                        data.userList = list.userList;
                         return database.save(data)
                             .then(onSuccess)
                             .catch(onError);
@@ -200,7 +202,7 @@
                 throwError(translation.LISTUSER_REQUIRED);
             }
             return getList(key).then(function (list) {
-                list.userList = list.userList.concat(userList);
+                list.userList = userList;
                 return saveList(list).then(function (doc) {
                     return doc.ok;
                 });

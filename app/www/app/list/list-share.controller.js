@@ -11,7 +11,7 @@
         var vm = this;
         vm.translation = translation;
         
-        vm.list = {};
+        vm.list_id = 0;        
         vm.items = [];
         vm.search = '';
         vm.selected = true;
@@ -39,9 +39,9 @@
             return;
         }
         
-            common.loading.show(vm.translation.LOADING_LABEL + ' ' +vm.translation.LIST_SHARE_LABEL + ' ...');
+        common.loading.show(vm.translation.LOADING_LABEL + ' ' +vm.translation.LIST_SHARE_LABEL + ' ...');
         listData.get($state.params.id, $scope.username).then(function(list) {
-            vm.list = list;
+            vm.list_id = $state.params.id;
             vm.userList = list.userList;
         }).finally(function() {
             common.loading.hide();
@@ -70,10 +70,10 @@
     }
     
     function changePermission($event, index) {
-        var optionCollection = [{name: vm.translation.EDIT_LABEL, action: function() {setPermission('edit', index)}, classe: '', icon: {left:'icon-left ion-edit'}},
+        $scope.optionCollection = [{name: vm.translation.EDIT_LABEL, action: function() {setPermission('edit', index)}, classe: '', icon: {left:'icon-left ion-edit'}},
                               {name: vm.translation.VISUALIZE_LABEL, action: function(){ setPermission('read', index)}, classe: '', icon: {left:'icon-left ion-eye'}}];
         
-        common.popover.show($event, optionCollection);
+        common.popover.show($event, $scope);
     }   
     function clear() {
         vm.search = '';
@@ -98,11 +98,11 @@
         vm.loading = true;
         userData.search(vm.search).then(function(data) {
             vm.items = [];
-            if(data.userlist != undefined) {
-                data.userlist.forEach(function(user) {
+            if(data != undefined) {
+                data.forEach(function(user) {
                     if(!userAlreadyInList(user.name)) {
                         vm.items.push(user);
-                    } 
+                    }
                 });
             }
             vm.loading = false;
@@ -111,7 +111,7 @@
     }    
     
     function onSelectUser(user) {
-        vm.model.selected = true;
+        vm.selected = true;
         if(!userAlreadyInList(user.name)) {
             var newUser = {name: user.name, permission: vm.permission};
             vm.userList.push(newUser);
@@ -123,10 +123,9 @@
     }
     
     function save() {
-        vm.list.userList = vm.userList;
-        listData.save(vm.list).then(function(data){
+        listData.share(vm.list_id, vm.userList).then(function(data){
            if(data) {
-               common.toast.showBottom(vm.translation.SHARED_SAVE_SUCCESSFULL);
+               common.toastr('success', vm.translation.SHARED_SAVE_SUCCESS);
            } 
         });
     }

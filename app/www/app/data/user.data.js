@@ -46,7 +46,7 @@
         function setUser(data) {
             if(data !== undefined) {
                 return {
-                    _id: data.id,
+                    _id: data._id,
                     name: data.name,
                     fullname: data.fullname,
                     email: data.email,
@@ -181,7 +181,7 @@
                 .catch(function(err) {
                     var message = translation.FIND_LOGIN_USER_ERROR; 
                     if(err.name == 'unauthorized') {
-                        message = translation.LOGIN_USER_NOT_FOUND_ERROR;
+                        message = translation.INVALID_USERNAME_PASSWORD;
                     }
                     return throwError(message, err);
                 })
@@ -238,22 +238,25 @@
             });
             
             return request
-                .then(onSuccess)
-                .catch(onError);
+                .then(onSuccess)/*
+                .catch(onError)*/;
             
             function onSuccess(response) {
                 if(response.data != undefined && response.data.ok) {
                     return setUser(response.data.user)
                 } else if(response.data != undefined && response.data.error != undefined) {
+                    if(response.data.error.name == 'useralreadyexists') {
+                        return throwError(translation.USER_ALREADY_EXISTS_ERROR, response.data.error);
+                    }
                     return throwError(translation.SIGNUP_ERROR, response.data.error);
                 }
                 
                 return throwError(translation.SIGNUP_ERROR);                
             }
-            
+            /*
             function onError(err){
                 return common.$q.reject(translation.SIGNUP_ERROR, err);
-            }
+            }*/
         }
         
         function searchUser(search) {
@@ -264,22 +267,17 @@
             });
             
             return request
-                .then(onSuccess)
-                .catch(onError);
+                .then(onSuccess);
             
             function onSuccess(response) {
                 if(response.data != undefined && response.data.ok) {
                     return response.data.userlist;
                 } else if(response.data != undefined && response.data.error != undefined) {
-                    if(response.data.error.name == 'unauthorized') {
-                        return throwError(translation.LOGIN_USER_NOT_FOUND_ERROR, response.data.error);
+                    if(response.data.error.name == 'notfound') {
+                        return [];
                     }
                 }
                 return throwError(translation.FIND_LOGIN_USER_ERROR, response.data.error);                
-            }
-            
-            function onError(err) {
-                return throwError(translation.FIND_LOGIN_USER_ERROR);
             }
         }
         

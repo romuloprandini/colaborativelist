@@ -54,9 +54,8 @@
         function createUser() {
             common.loading.show(vm.translation.LOADING_SIGNUP);
             userData.create(vm.newUser).then(function(response) {
-                if(response.ok) {
-                    common.modal.hide();
-                }
+                common.modal.hide();
+                common.toastr('success', vm.translation.SIGNUP_SUCCESS.replace('USERNAME', response.name));
             })
             .finally(function(){
                 common.loading.hide();

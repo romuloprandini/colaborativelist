@@ -1,6 +1,15 @@
 {
+   "_id": "_design/users",
+   "language": "javascript",
+   "views": {
+       "name": {
+           "map": "function(doc) {var name = doc._id.replace('org.couchdb.user:','');  emit(name, doc.metadata);}"
+       }
+   }
+}
+
+{
    "_id": "org.couchdb.user:app",
-   "_rev": "6-66e078f19434c3e261b6d3f6de21ac7b",
    "password_scheme": "pbkdf2",
    "iterations": 10,
    "name": "app",
@@ -19,7 +28,6 @@
 
 {
    "_id": "1BF58BDB-DCC1-D128-901A-65A2769D210C",
-   "_rev": "2-13400d83b3793f6caae888ebf8306a05",
    "name": "Teste 2",
    "user": "app",
    "productList": [
@@ -28,7 +36,6 @@
 
 {
    "_id": "B9DA0F68-5B9D-3E3C-AE84-E886D6408FF2",
-   "_rev": "3-b4444d3d7e3f1e0b3f1a101cd19c3924",
    "name": "Lista teste",
    "user": "app",
    "productList": [
@@ -45,7 +52,6 @@
 
 {
    "_id": "E4701DE5-C500-623E-A45A-4FD1221B5373",
-   "_rev": "20-88c696219ddc8b40b7f458a6736075b4",
    "name": "Teste 1",
    "user": "app",
    "productList": [
@@ -86,7 +92,6 @@
 
 {
    "_id": "_design/filter",
-   "_rev": "2-da903c70a0f772f454619ce1d0c1840d",
    "filters": {
        "by_user": "function(doc, req) { return (doc.user == req.query.user) }"
    }
@@ -94,7 +99,6 @@
 
 {
    "_id": "_design/view_list",
-   "_rev": "10-03f0b12b56cf1a3cbc9b497c6ce4e4d3",
    "language": "javascript",
    "views": {
        "by_user": {
@@ -106,7 +110,6 @@
 
 {
    "_id": "_design/view_product",
-   "_rev": "3-8acafdf7ff95e9dc70a7a2ead9ec2426",
    "language": "javascript",
    "views": {
        "by_list_id_and_name": {
