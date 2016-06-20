@@ -28,18 +28,24 @@
         //FUNCTIONS
         
         function init() {
+          console.log("Entrou user data");
             localUserDB = new PouchDB('user');
             userDNS = config.url+'/colaborativelist/user.php';
             user = getGuest();
-            
+            $rootScope.username = user.name;
+          
             $rootScope.$on(config.events.onLogin, function(event, data){
+                    console.log("entrou onLogin userData");
                 user = data;
+                $rootScope.username = data.name;
                 database.replicate(user.name);
                 database.syncronize(user.name);
             });
             $rootScope.$on(config.events.onLogout, function(event, data){
+                    console.log("entrou onLogout userData");
                 database.syncronize(data, true);
                 user = data;
+                $rootScope.username = data.name;
             });
         }
         
@@ -68,9 +74,9 @@
                 .catch(onError);
             
             function onSuccess(response) {
-                if(response.data != undefined && response.data.ok) {
+                if(response.data !== undefined && response.data.ok) {
                     return setUser(response.data.user);
-                } else if(response.data != undefined && response.data.error != undefined) {
+                } else if(response.data !== undefined && response.data.error !== undefined) {
                     return throwError(translation.FIND_LOGIN_USER_ERROR, response.data.error);
                 }
                 return throwError(translation.FIND_LOGIN_USER_ERROR);
@@ -78,7 +84,7 @@
             
             function onError(message){
                 return throwError(translation.FIND_LOGIN_USER_ERROR, message);
-            };
+            }
         }
         
         function getGuest() {
@@ -86,40 +92,52 @@
         }
         
         function getUser() {
+          return common.$q.when(function() {
             if(!isGuest(user.name))
             {
-                return common.$q.resolve(user);
+              return common.$q.resolve(user);
             }
-            return common.$q.when(getUserStored().then(function(user) {
-                if(navigator.onLine) {
-                    return database.getRemoteDB().getSession()
-                        .then(function(doc) {
-                            if(doc.ok && doc.userCtx.name != undefined) {
-                                return getUserData(doc.userCtx.name).then(function(user) {
-                                    common.$broadcast(config.events.onLogin, user);
-                                    return user;
-                                });
-                            } 
-                            return login(user.username, user.password);
-                        })
-                } else {
-                    return login(user.username, user.password);
-                } 
-          })
-          .catch(function(err) {
-               return getGuest();
-          }));
+
+            if(navigator.onLine) {
+              return database.getRemoteDB().getSession()
+                .then(function(doc) {
+                    if(doc.ok && doc.userCtx.name !== undefined) {
+                        return getUserData(doc.userCtx.name)
+                          .then(function(user) {
+                            common.$broadcast(config.events.onLogin, user);
+                            return user;
+                          });
+                    }
+                    return getUserStored().then(function(user) {
+                      return login(user.username, user.password);
+                    });
+                })
+                .catch(function(err) {
+                  console.log('error on getUser', err);
+                  return getGuest();
+                });
+            }
+
+            return getGuest();
+          });
         }
         
         function getUserStored() {
             return localUserDB.get('user')
-                .then(onSuccess);
+                .then(onSuccess)
+                .catch(onError);
                 
             function onSuccess(doc) {
-                if(doc.username != '' && doc.password != '') {
+                if(doc.username !== '' && doc.password !== '') {
                     return doc;
                 }
-                common.$q.reject();
+               return getGuest();
+            }
+                          
+            function onError(err) {
+              if(err.name !== 'not_found') {
+                setUserStored('','');
+              }
             }
         }
         
@@ -157,11 +175,11 @@
         }
 
         function login(username, password) {
-            if((username == undefined || username == '') && (password == undefined || password == '')) {
+            if((username === undefined || username === '') && (password === undefined || password === '')) {
                 return throwError(translation.FIELDS_REQUIRED);
-            } else if(username == undefined || username == '') {
+            } else if(username === undefined || username === '') {
                 return throwError(translation.USERNAME_REQUIRED);
-            } else if(password == undefined || password == '') {
+            } else if(password === undefined || password === '') {
                 return throwError(translation.PASSWORD_REQUIRED);
             }
             return common.$q.when(
@@ -203,19 +221,19 @@
         }
         
         function createUser(data) {
-            if(data == undefined || data == null) {
+            if(data === undefined || data == null) {
                 return throwError(translation.FIELDS_REQUIRED);
             }
-            if(data.username == undefined || data.username == null || data.username.trim() == '') {
+            if(data.username === undefined || data.username == null || data.username.trim() === '') {
                 return throwError(translation.USERNAME_REQUIRED);
             }
-            if(data.password == undefined || data.password == null || data.password.trim() == '') {
+            if(data.password === undefined || data.password == null || data.password.trim() === '') {
                 return throwError(translation.PASSWORD_REQUIRED);
             }
-            if(data.fullName == undefined || data.fullName == null || data.fullName.trim() == '') {
+            if(data.fullName === undefined || data.fullName == null || data.fullName.trim() === '') {
                 return throwError(translation.FULLNAME_REQUIRED);
             }
-            if(data.email == undefined || data.email == null || data.email.trim() == '') {
+            if(data.email === undefined || data.email == null || data.email.trim() === '') {
                 return throwError(translation.EMAIL_REQUIRED);
             }
             var validEmail = /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -242,9 +260,9 @@
                 .catch(onError)*/;
             
             function onSuccess(response) {
-                if(response.data != undefined && response.data.ok) {
+                if(response.data !== undefined && response.data.ok) {
                     return setUser(response.data.user)
-                } else if(response.data != undefined && response.data.error != undefined) {
+                } else if(response.data !== undefined && response.data.error !== undefined) {
                     if(response.data.error.name == 'useralreadyexists') {
                         return throwError(translation.USER_ALREADY_EXISTS_ERROR, response.data.error);
                     }
@@ -270,9 +288,9 @@
                 .then(onSuccess);
             
             function onSuccess(response) {
-                if(response.data != undefined && response.data.ok) {
+                if(response.data !== undefined && response.data.ok) {
                     return response.data.userlist;
-                } else if(response.data != undefined && response.data.error != undefined) {
+                } else if(response.data !== undefined && response.data.error !== undefined) {
                     if(response.data.error.name == 'notfound') {
                         return [];
                     }

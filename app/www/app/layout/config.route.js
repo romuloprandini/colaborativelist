@@ -21,7 +21,12 @@
                         'pageContent' : {
                             templateUrl: 'app/layout/layout.html',
                             controller: 'LayoutController',
-                            controllerAs: 'vm'
+                            controllerAs: 'vm',
+                            resolve: {
+                              'configureServiceData': function(configureService) {
+                                return configureService.configure();
+                              }
+                            }
                         },
                         'sideMenuContent' : {
                             templateUrl: 'app/layout/sidemenu.html',

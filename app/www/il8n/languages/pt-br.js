@@ -1,4 +1,5 @@
  window.translation = {
+	 LANGUAGE : "pt-br",
      
 	//OPERATIONS
     NEW_LABEL : "Novo",

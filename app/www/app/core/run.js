@@ -16,27 +16,5 @@ angular
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
-            
-            
-            $rootScope.username = config.guestName;
-            
-            $rootScope.$on(config.events.onDatabaseConfigurated, function(event, data) {
-                console.log("iniciando run");
-                userData.get().then(function(user) {
-                    console.log("pegou usuario");
-                    $rootScope.username = data.name;
-                }).finally(function() {
-                    console.log("removeu o splashscreen");
-                    if(navigator.splashscreen)
-                        navigator.splashscreen.hide();
-                });
-            });
-            
-            $rootScope.$on(config.events.onLogin, function(event, data) {
-                $rootScope.username = data.name;
-            });
-            $rootScope.$on(config.events.onLogout, function(event, data) {
-                $rootScope.username = data.name;
-            });
         });
     }

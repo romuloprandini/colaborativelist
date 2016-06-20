@@ -33,12 +33,12 @@
     angular
         .module('colaborativelist.core')
         .constant('config', config)
-        .config(configure);
+        .config(configure)
+        .factory('configureService', configureService);
         
     configure.$inject = ['$logProvider', '$stateProvider', '$urlRouterProvider', 'routehelperConfigProvider', 'toastr'];
     
     function configure($logProvider,  $stateProvider, $urlRouterProvider, routehelperConfigProvider, toastr) {
-        
         configureToastr();
         configureLogging();
         configureRouting();
@@ -64,5 +64,37 @@
             routeCfg.config.resolveAlways = { };
         }
     }
+  
+  configureService.$inject = ['$rootScope', 'common', 'database', 'userData'];
+  function configureService($rootScope, common, database, userData) {
+    
+    return {
+      configure: function() {
+        console.log('entrou configureService');
+        return database.configure().then(function(data) {
+        console.log('entrou configure database');
+          
+          var promisseUser = userData.get()
+            .then(function(user) {
+              console.log('entrou configure user');
+              $rootScope.username = data.name;
+              return common.$q.when(true);
+            });
+          
+            var defered = common.$q.defer();
+            var interval = setInterval(function(){ 
+              if(translation.LANGUAGE !== undefined) {
+                console.log('resolveu language');
+                defered.resolve(true);
+                clearInterval(interval);
+              }
+            }, 100);
+          var promisseLanguage = defered.promise;
+          
+          return common.$q.all([promisseUser, promisseLanguage]);
+        });
+      }
+    }
+  }
 
 })();

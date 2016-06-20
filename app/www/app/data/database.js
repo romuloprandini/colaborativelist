@@ -35,13 +35,10 @@
         //FUNCTIONS
         
         function init() {
-            configure().then(function(data) {
-                $rootScope.$broadcast(config.events.onDatabaseConfigurated, data);
-            });
+          console.log("Entrou database");
         }
                 
         function configure() {
-            console.log("iniciando a configuracao do banco");
             return database.localDB.get('version').then(function(doc) {
                 if(doc.value <= config.version)
                 {
@@ -92,7 +89,7 @@
                 {
                 _id: '_design/filter',
                 filters: {
-                    by_user: function(doc, req) { if(doc.userList) { var isvalid = false; doc.userList.forEach(function(user) { if(user.name == req.query.user) {isvalid = true; return; } }); } return isvalid }.toString()
+                    by_user: function(doc, req) {  var isvalid = false; if(doc.userList) {doc.userList.forEach(function(user) { if(user.name == req.query.user) {isvalid = true; return; } }); } return isvalid }.toString()
                 }
                 }];
 
@@ -127,7 +124,7 @@
         function replicate(userName) {
             //Verify if remote database exists
             database.remoteDB.info().then(function(info){
-                replicate = PouchDB.replicate(database.remoteDB._db_name, database.localDB._db_name, {filter: database.filter, query_params: {'user' : userName}});
+                var replicate = PouchDB.replicate(database.remoteDB._db_name, database.localDB._db_name, {filter: database.filter, query_params: {'user' : userName}});
                 replicate.on('complete', function (info) {
                     common.$broadcast(config.events.onReplicateComplete, info);
                 });
