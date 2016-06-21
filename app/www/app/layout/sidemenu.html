@@ -81,7 +81,7 @@
                 ui-sref-active="active"
                 ui-sref="{{route.name}}">
                     <i class="menu-icon icon" ng-class="route.settings.content.icon"></i>
-                    <h2 class="menu-text">{{route.settings.content.text}}</h2>
+                    <h2 class="menu-text">{{vm.translation[route.settings.content.text]}}</h2>
                 </ion-item>
             </ion-list>
         </div>

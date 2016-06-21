@@ -23,15 +23,18 @@
         init();
         
         function init() {
+          if($scope.user !== undefined && $scope.user.name !== undefined) {
+            vm.user = $scope.user
+            vm.userReady = true;            
+          } else {
             userData.get().then(function(user) {
                 $scope.user = user;
                 vm.user = user;
-                vm.userReady = true;
-                //$scope.$apply();
             })
             .finally(function() {
                 vm.userReady = true;
             });
+          }
         }
         
         function isLoadingUser() {

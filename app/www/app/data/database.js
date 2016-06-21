@@ -9,12 +9,19 @@
     
     function database($rootScope, config, common) { 
         var database = this;
-        database.filter = 'filter/by_user';
-        database.remoteDB = new PouchDB(config.database.url+':'+config.database.port+'/'+config.database.name, {skipSetup: true} );
-        database.localDB = new PouchDB(config.database.name);
-        database.sync;
         
-        var services = {
+        init();
+                
+        return database.services;
+                
+        //FUNCTIONS
+        
+        function init() {
+          database.filter = 'filter/by_user';
+          database.remoteDB = new PouchDB(config.database.url+':'+config.database.port+'/'+config.database.name, {skipSetup: true} );
+          database.localDB = new PouchDB(config.database.name);
+          database.sync;
+          database.services = {
             configure: configure,
             list: list,
             get: get,
@@ -26,16 +33,7 @@
             syncronize: syncronize,
             getLocalDB: getLocalDB,
             getRemoteDB: getRemoteDB
-        }
-        
-        init();
-                
-        return services;
-                
-        //FUNCTIONS
-        
-        function init() {
-          console.log("Entrou database");
+          }
         }
                 
         function configure() {
@@ -182,7 +180,7 @@
         }
         
         function save(data) {
-            if(data._id == undefined || data._id == 0) {
+            if(data._id === undefined || data._id === 0) {
                 return common.$q.when(database.localDB.post(data));
             } else {
                 return database.localDB.get(data._id).then(function(doc){

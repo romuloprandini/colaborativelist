@@ -27,7 +27,7 @@
                             nav: 1,
                             content: {
                                 icon: 'fa fa-th-list',
-                                text: translation.LIST_LABEL
+                                text: 'LIST_LABEL'
                             }
                         }
                     }

@@ -70,13 +70,11 @@
     
     return {
       configure: function() {
-        console.log('entrou configureService');
         return database.configure().then(function(data) {
-        console.log('entrou configure database');
           
           var promisseUser = userData.get()
             .then(function(user) {
-              console.log('entrou configure user');
+              $rootScope.user = user;
               $rootScope.username = data.name;
               return common.$q.when(true);
             });
@@ -84,7 +82,6 @@
             var defered = common.$q.defer();
             var interval = setInterval(function(){ 
               if(translation.LANGUAGE !== undefined) {
-                console.log('resolveu language');
                 defered.resolve(true);
                 clearInterval(interval);
               }

@@ -8,10 +8,20 @@
     userData.$inject = ['$rootScope', '$http', 'config', 'common', 'database'];
                 
     function userData($rootScope, $http, config, common, database) {
-        var user,
-        userDNS,
-        localUserDB, 
-        service = {
+      var sv = this;
+      init();
+        
+        return sv.service;
+        
+        //FUNCTIONS
+        
+        function init() {
+          sv.localUserDB = new PouchDB('user');
+          sv.userDNS = config.url+'/colaborativelist/user.php';
+          sv.user = getGuest();
+          $rootScope.username = sv.user.name;
+          
+          sv.service = {
             get: getUser,
             set: setUser,
             login: login,
@@ -19,34 +29,19 @@
             create: createUser,
             search: searchUser,
             isGuest: isGuest
-        }
-        
-        init()
-        
-        return service;
-        
-        //FUNCTIONS
-        
-        function init() {
-          console.log("Entrou user data");
-            localUserDB = new PouchDB('user');
-            userDNS = config.url+'/colaborativelist/user.php';
-            user = getGuest();
-            $rootScope.username = user.name;
+          }
           
-            $rootScope.$on(config.events.onLogin, function(event, data){
-                    console.log("entrou onLogin userData");
-                user = data;
-                $rootScope.username = data.name;
-                database.replicate(user.name);
-                database.syncronize(user.name);
-            });
-            $rootScope.$on(config.events.onLogout, function(event, data){
-                    console.log("entrou onLogout userData");
-                database.syncronize(data, true);
-                user = data;
-                $rootScope.username = data.name;
-            });
+          $rootScope.$on(config.events.onLogin, function(event, data){
+              sv.user = data;
+              $rootScope.username = data.name;
+              database.replicate(data.name);
+              database.syncronize(data.name);
+          });
+          $rootScope.$on(config.events.onLogout, function(event, data){
+              database.syncronize(data, true);
+              sv.user = data;
+              $rootScope.username = data.name;
+          });
         }
         
         function setUser(data) {
@@ -92,10 +87,12 @@
         }
         
         function getUser() {
-          return common.$q.when(function() {
-            if(!isGuest(user.name))
+          return common.$q.when(getUserInternal());
+          
+          function getUserInternal() {
+            if(!isGuest(sv.user.name))
             {
-              return common.$q.resolve(user);
+              return common.$q.resolve(sv.user);
             }
 
             if(navigator.onLine) {
@@ -104,8 +101,9 @@
                     if(doc.ok && doc.userCtx.name !== undefined) {
                         return getUserData(doc.userCtx.name)
                           .then(function(user) {
-                            common.$broadcast(config.events.onLogin, user);
-                            return user;
+                            sv.user = setUser(user);
+                            common.$broadcast(config.events.onLogin, sv.user);
+                            return sv.user;
                           });
                     }
                     return getUserStored().then(function(user) {
@@ -113,13 +111,12 @@
                     });
                 })
                 .catch(function(err) {
-                  console.log('error on getUser', err);
                   return getGuest();
                 });
             }
 
             return getGuest();
-          });
+          }
         }
         
         function getUserStored() {
@@ -189,8 +186,9 @@
                         .then(function(ok) {
                             if(ok) {
                                 return getUserData(username).then(function(user) {
-                                    common.$broadcast(config.events.onLogin, user);
-                                    return user;  
+                                    sv.user = setUser(user);
+                                    common.$broadcast(config.events.onLogin, sv.user);
+                                    return sv.user;  
                                 });
                             }
                             return throwError(translation.FIND_LOGIN_USER_ERROR, err);
@@ -210,9 +208,9 @@
             return common.$q.when(database.getRemoteDB().logout()
                 .then(function(){
                     return setUserStored('','').then(function(doc) {
-                        var user = getGuest();
-                        common.$broadcast(config.events.onLogout, user);
-                        return user;
+                        sv.user = getGuest();
+                        common.$broadcast(config.events.onLogout, sv.user);
+                        return sv.user;
                     });
                 })
                 .catch(function(err){
