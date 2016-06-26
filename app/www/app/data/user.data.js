@@ -60,7 +60,7 @@
         function getUserData(userName) {
             var request = $http({
                 method: 'get',
-                url: userDNS+'?username='+userName,
+                url: sv.userDNS+'?username='+userName,
                 responseType: 'json'
             });
             
@@ -98,7 +98,7 @@
             if(navigator.onLine) {
               return database.getRemoteDB().getSession()
                 .then(function(doc) {
-                    if(doc.ok && doc.userCtx.name !== undefined) {
+                    if(doc.ok && doc.userCtx.name !== null) {
                         return getUserData(doc.userCtx.name)
                           .then(function(user) {
                             sv.user = setUser(user);
@@ -107,7 +107,10 @@
                           });
                     }
                     return getUserStored().then(function(user) {
-                      return login(user.username, user.password);
+                        if(user.username !== '' && user.password !== '') {
+                            return login(user.username, user.password);
+                        }
+                        return getGuest();
                     });
                 })
                 .catch(function(err) {
@@ -120,15 +123,12 @@
         }
         
         function getUserStored() {
-            return localUserDB.get('user')
+            return sv.localUserDB.get('user')
                 .then(onSuccess)
                 .catch(onError);
                 
             function onSuccess(doc) {
-                if(doc.username !== '' && doc.password !== '') {
-                    return doc;
-                }
-               return getGuest();
+                return doc;
             }
                           
             function onError(err) {
@@ -140,7 +140,7 @@
         
         function setUserStored(username, password) {
             var userData = {'_id':'user', 'username': username, 'password': password};
-            return localUserDB.get('user')
+            return sv.localUserDB.get('user')
                 .then(onSuccess)
                 .catch(onError);
             
@@ -157,7 +157,7 @@
             }
             
             function saveUserLocal(user) {
-                return localUserDB.put(user)
+                return sv.localUserDB.put(user)
                     .then(onSuccess)
                     .catch(onError);
                     
@@ -241,7 +241,7 @@
                         
             var request = $http({
                 method: 'post',
-                url: userDNS,
+                url: sv.userDNS,
                 responseType: 'json',
                 data: {
                     username: data.username,
@@ -278,7 +278,7 @@
         function searchUser(search) {
             var request = $http({
                 method: 'get',
-                url: userDNS+'?search='+search,
+                url: sv.userDNS+'?search='+search,
                 responseType: 'json'
             });
             

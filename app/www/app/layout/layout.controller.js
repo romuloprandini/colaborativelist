@@ -8,8 +8,6 @@
     LayoutController.$inject = ['configureServiceData'];
     
     function LayoutController(configureServiceData) {
-      if(navigator.splashscreen) {
-          navigator.splashscreen.hide();
-      }
+      console.log('terminou carregar as Configurações do APP');
     }
 })();

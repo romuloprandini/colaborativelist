@@ -9951,10 +9951,10 @@ Side Menu
 .item-divider-products {
   padding-top: 15px; }
 
-.not-syncronized > a {
+ion-item.not-syncronized {
   background: #E4E4E4 !important; }
 
-.not-syncronized > a > p {
+ion-item.not-syncronized > p {
   color: #E42112;
   font-size: smaller;
   margin-top: -5px; }

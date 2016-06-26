@@ -24,6 +24,7 @@
                             controllerAs: 'vm',
                             resolve: {
                               'configureServiceData': function(configureService) {
+                                console.log('entrou configureServiceData');
                                 return configureService.configure();
                               }
                             }

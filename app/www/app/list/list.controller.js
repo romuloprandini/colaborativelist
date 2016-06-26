@@ -21,11 +21,13 @@
         vm.showSearch = showSearch;
         vm.showOptions = showOptions;
         vm.goProducts = goProducts;
+        vm.syncViewOnly = syncViewOnly; 
         
         init();
         
         //FUNCTIONS
         function init() {
+            console.log('entrou list Controller');
             $scope.$on(config.events.onDataChanged, function(event, data) {
                 getLists();
             });
@@ -33,6 +35,7 @@
         }
         
         function getLists() {
+            console.log('listController - Entrou buscar listas - username: ', $scope.username);
             common.loading.show(vm.translation.LOADING_LABEL + ' ' +vm.translation.LIST_LABEL + ' ...');
             
             listData.list($scope.username)
@@ -40,6 +43,7 @@
                 .finally(onFinally);
                 
             function onSuccess(list) {
+            console.log('listController - pegando as listas: ', list);
                 vm.listCollection = list;
             }
             
@@ -151,13 +155,15 @@
         function showOptions($event, list) {
             $event.preventDefault();
             $event.stopPropagation();
-            $scope.optionCollection = [{name: vm.translation.EDIT_LABEL, action: function() {edit(list)}, classe: '', icon: {left:'icon-left ion-compose'}},
-                                {name: vm.translation.DELETE_LABEL, action: function(){ remove(list)}, classe: '', icon: {left:'icon-left ion-trash-a'}}];
-            if(list.canSync) {
-                $scope.optionCollection.push({name: vm.translation.SYNC_LABEL, action: function(){ sync(list)}, classe: '', icon: {left:'icon-left ion-loop'}})
+            $scope.optionCollection = [{name: vm.translation.DELETE_LABEL, action: function(){ remove(list)}, classe: '', icon: {left:'icon-left ion-trash-a'}}];
+            if(list.canEdit) {
+                $scope.optionCollection.push({name: vm.translation.EDIT_LABEL, action: function() {edit(list)}, classe: '', icon: {left:'icon-left ion-compose'}});
+                if(!list.isGuest) {
+                    $scope.optionCollection.push({name: vm.translation.SHARE_LABEL, action: function(){ share(list._id)}, classe: '', icon: {left:'icon-left ion-share'}})
+                }
             }
-            if(!list.isGuest) {
-                $scope.optionCollection.push({name: vm.translation.SHARE_LABEL, action: function(){ share(list._id)}, classe: '', icon: {left:'icon-left ion-share'}})
+            if(list.canSync) {
+                $scope.optionCollection.push({name: vm.translation.SYNC_LABEL, action: function(){ sync(list)}, classe: '', icon: {left:'icon-left ion-loop'}});
             }
 
             common.popover.show($event, $scope);
@@ -165,6 +171,10 @@
         
         function goProducts(list) {
             $state.go('app.productList',{id: list._id, canEdit: list.canEdit});
+        }
+        
+        function syncViewOnly(list) {
+            return (list.canSync || !list.canEdit);
         }
     }
 })();

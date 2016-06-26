@@ -15,6 +15,7 @@
                 {
                     name: 'app.list',
                     config: {
+                        cache: false,
                         url: 'list',
                         views: {
                             'pageContent@': {
@@ -35,6 +36,7 @@
                 {
                     name: 'app.list.share', 
                     config: {
+                        cache: false,
                         url: 'share/:id',
                         views: {
                             'pageContent@': {

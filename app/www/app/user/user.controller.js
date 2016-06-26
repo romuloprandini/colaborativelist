@@ -5,9 +5,9 @@
         .module('colaborativelist.user')
         .controller('UserController', UserController);
     
-    UserController.$inject = ['$scope', '$state', '$ionicSideMenuDelegate', 'common', 'config', 'userData'];
+    UserController.$inject = ['$scope', '$state', '$ionicHistory', '$ionicSideMenuDelegate', 'common', 'config', 'userData'];
     
-    function UserController($scope, $state, $ionicSideMenuDelegate, common, config, userData) {
+    function UserController($scope, $state, $ionicHistory, $ionicSideMenuDelegate, common, config, userData) {
         var vm = this;
         vm.translation = translation;
         vm.isLoadingUser = isLoadingUser;
@@ -23,12 +23,16 @@
         init();
         
         function init() {
+            console.log('entrou user Controller');
           if($scope.user !== undefined && $scope.user.name !== undefined) {
+            console.log('UserController - já pegou o usuario: ', $scope.user);
             vm.user = $scope.user
             vm.userReady = true;            
           } else {
             userData.get().then(function(user) {
+            console.log('UserController - teve que buscar usuario: ', user);
                 $scope.user = user;
+                $scope.username = user.name;
                 vm.user = user;
             })
             .finally(function() {
@@ -92,7 +96,9 @@
                     vm.user = user;
                     common.popup.hide();
                     $ionicSideMenuDelegate.toggleLeft();
-                    $state.go('app', {}, {'location': 'true'});
+                    $state.go('app', {}, {'location': 'replace'}).then(function(dados) {
+                        $ionicHistory.clearHistory();
+                    });
                 })
                 .finally(function() {
                     common.loading.hide();
@@ -108,7 +114,9 @@
                 $scope.user = user;
                 vm.user = user;
                 $ionicSideMenuDelegate.toggleLeft();
-                $state.go('app', {}, {'location': 'true'});
+                    $state.go('app', {}, {'location': 'replace'}).then(function(dados) {
+                        $ionicHistory.clearHistory();
+                    });
             })
             .finally(function() {
                 common.loading.hide();

@@ -2,7 +2,7 @@
     'use strict';
 
     var databaseSettings = {
-        url: 'http://ec2-52-90-241-128.compute-1.amazonaws.com',
+        url: 'http://ec2-54-165-112-168.compute-1.amazonaws.com',
         port: 5984,
         name: 'list'
         
@@ -22,7 +22,7 @@
     }
     
     var config = {
-        url: 'http://ec2-52-90-241-128.compute-1.amazonaws.com',
+        url: 'http://ec2-54-165-112-168.compute-1.amazonaws.com',
         events: events,
         imageSettings: imageSettings,
         version: '1.0.0',
@@ -65,30 +65,40 @@
         }
     }
   
-  configureService.$inject = ['$rootScope', 'common', 'database', 'userData'];
-  function configureService($rootScope, common, database, userData) {
+  configureService.$inject = ['$state', '$rootScope', 'common', 'database', 'userData'];
+  function configureService($state, $rootScope, common, database, userData) {
     
     return {
       configure: function() {
+        console.log('entrou Configure app');
         return database.configure().then(function(data) {
           
           var promisseUser = userData.get()
             .then(function(user) {
+            console.log('Configure app - pegou o usuario: ', user);
               $rootScope.user = user;
-              $rootScope.username = data.name;
+              $rootScope.username = user.name;
               return common.$q.when(true);
             });
           
             var defered = common.$q.defer();
             var interval = setInterval(function(){ 
               if(translation.LANGUAGE !== undefined) {
+                console.log('Configure app - pegou o idioma');
                 defered.resolve(true);
                 clearInterval(interval);
               }
             }, 100);
           var promisseLanguage = defered.promise;
           
-          return common.$q.all([promisseUser, promisseLanguage]);
+          return common.$q.all([promisseUser, promisseLanguage])
+            .then(function (promisses) {
+                console.log('Configure app - completou as configurações');
+                if(navigator.splashscreen) {
+                    navigator.splashscreen.hide();
+                }
+                return true;
+            });
         });
       }
     }

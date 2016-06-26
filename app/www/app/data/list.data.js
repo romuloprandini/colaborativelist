@@ -44,8 +44,8 @@
                     listReturn.canSync = true;
                 }
                 data.userList.forEach(function(user) {
-                    if(user.name == username && user.permission == 'edit') {
-                        listReturn.canEdit = true;
+                    if(user.name == username && user.permission == 'read') {
+                        listReturn.canEdit = false;
                         return;
                     }
                 })

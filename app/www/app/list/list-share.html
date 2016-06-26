@@ -16,7 +16,7 @@
                 {{vm.translation.NO_RECORDS_FOUND}}
             </div>
             <div class="item item-avatar" ng-repeat="item in vm.items track by $index" ng-click="vm.onSelectUser(item)" ng-hide="vm.loading">
-                <img ng-src="{{(item.avatar != undefined && item.avatar != '') && item.avatar || 'img/avatar.png'}}">
+                <img ng-src="{{(item.avatar != undefined && item.avatar != '') && item.avatar || '../content/img/avatar.png'}}">
                 <h2>{{item.fullname}}</h2>
                 <p style="font-size:smaller">{{item.email}}</p>
             </div>

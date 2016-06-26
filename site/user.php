@@ -21,9 +21,9 @@
         $json = "";
         if($user != null) {
             if(isset($user->id)) {
-                return "{\"id\":\"".$user->id."\", \"name\":\"".$user->key."\", \"fullname\":\"".$user->value->fullname."\", \"email\":\"".$user->value->email."\", \"avatar\":\"".$user->value->avatar."\"}";  
+                return "{\"_id\":\"".$user->id."\", \"name\":\"".$user->key."\", \"fullname\":\"".$user->value->fullname."\", \"email\":\"".$user->value->email."\", \"avatar\":\"".$user->value->avatar."\"}";  
             }            
-            return "{\"id\":\"".$user->_id."\", \"name\":\"".$user->name."\", \"fullname\":\"".$user->metadata->fullname."\", \"email\":\"".$user->metadata->email."\", \"avatar\":\"".$user->metadata->avatar."\"}";
+            return "{\"_id\":\"".$user->_id."\", \"name\":\"".$user->name."\", \"fullname\":\"".$user->metadata->fullname."\", \"email\":\"".$user->metadata->email."\", \"avatar\":\"".$user->metadata->avatar."\"}";
         }
     }
 

@@ -60,6 +60,8 @@
 	NAME_LABEL : "Nome",
 	LIST_SHARE_LABEL: "Compartilhar Lista",
     WHO_CAN_ACCESS_LABEL : "Quem pode acessar",
+	NOT_SYNCRONIZED_LABEL : "Não Sincronizado",
+	READ_ONLY_LABEL : "Somente Leitura",
     //REQUIRED FIELDS
 	INVALID_LIST : "Lista Inválida!",
     LIST_ID_REQUIRED : "O código da lista é obrigatório!",
