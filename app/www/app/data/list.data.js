@@ -5,21 +5,58 @@
         .module('colaborativelist.data')
         .factory('listData', listData);
     
-    listData.$inject = ['common', 'config', 'database'];
+    listData.$inject = ['$rootScope', 'common', 'config', 'database'];
                 
-    function listData(common, config, database) { 
+    function listData($rootScope, common, config, database) {
+            var promise = common.$q.defer();  
             var service = {
                 get: getList,
-                list: getAllList,
+                list: listAll,
                 save: saveList,
                 remove: removeList,
                 share: shareList,
-                sync: syncList
+                sync: syncList,
+                ready: getReady
             }
+        
+        init();
             
         return service;
         
+        
         //FUNCTIONS
+        
+        function init() {
+            promise.resolve(database.createDesignDoc('view_list', {
+                by_user: {
+                    map: function (doc) { 
+                        if(doc.name.indexOf('_design') == -1) {
+                            if(doc.userList) {
+                                doc.userList.forEach(function(user) {
+                                    emit(user.name, doc.name.toLowerCase());
+                                }); 
+                            }
+                        }
+                        }.toString(),
+                    reduce: '_count'
+                }
+            }). then(function(doc) {
+                console.log('Criou o design doc Lista', doc);
+                return doc;
+            }));
+            
+            $rootScope.$on(config.events.onLogin, function(event, user){
+                var options = {
+                    filter: database.filter, 
+                    query_params: {'user' : user.name}
+                };
+                database.replicate(options);
+            });
+        } 
+        
+        function getReady(){
+            return promise.promise;
+        }
 
         function setListData(data, username) {
             var listReturn;
@@ -71,15 +108,12 @@
                 }
         }
 
-        function getAllList(username) {
+        function listAll(userNameList) {
             var options = {
                 include_docs : true, 
-                keys: [config.guestName], 
+                keys: userNameList, 
                 reduce:false
             };
-            if(username != config.guestName) {
-                options.keys.push(username);
-            }
             return database.filter('view_list/by_user', options)
                 .then(onSuccess)
                 .catch(onError);
@@ -87,8 +121,8 @@
             function onSuccess(doc) {
                 var listCollection = [];
                 angular.forEach(doc.rows, function (row) {
-                    if(row.key == config.guestName || row.key == username) {
-                        listCollection.push(setListData(row.doc, username));
+                    if(userNameList.indexOf(row.key) != -1) {
+                        listCollection.push(setListData(row.doc, row.key));
                     }
                 });
                 
@@ -126,22 +160,20 @@
                             .catch(onError);
                     });
                 } else {
-                    var newList = {
+                    list = {
                         name: list.name,
                         userList: [{name: username, permission: 'edit'}],
                         productList: []
                     }
                     
-                    list = setListData(newList, username);
-                    
-                    return database.save(newList)
+                    return database.save(list)
                         .then(onSuccess)
                         .catch(onError);
                 }
                 
                 function onSuccess(doc) {
                     list._id = doc.id;
-                    return list;                    
+                    return setListData(list, username);                  
                 }
                 
                 function onError(err) {
@@ -229,9 +261,9 @@
                 throwError(message, err);
             }
         }
-    }
     
-    function throwError(message, cause) {
-        throw {message: message, cause: cause} ;
+        function throwError(message, cause) {
+            throw {message: message, cause: cause} ;
+        }
     }
 })();

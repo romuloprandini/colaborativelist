@@ -8,21 +8,12 @@
     database.$inject = ['$rootScope', 'config', 'common'];
     
     function database($rootScope, config, common) { 
-        var database = this;
+        var sv = this;
         
         init();
                 
-        return database.services;
-                
-        //FUNCTIONS
-        
-        function init() {
-          database.filter = 'filter/by_user';
-          database.remoteDB = new PouchDB(config.database.url+':'+config.database.port+'/'+config.database.name, {skipSetup: true} );
-          database.localDB = new PouchDB(config.database.name);
-          database.sync;
-          database.services = {
-            configure: configure,
+        return {
+            createDesignDoc: createDesignDoc,
             list: list,
             get: get,
             filter: filter,
@@ -33,119 +24,75 @@
             syncronize: syncronize,
             getLocalDB: getLocalDB,
             getRemoteDB: getRemoteDB
-          }
-        }
+        };
                 
-        function configure() {
-            return database.localDB.get('version').then(function(doc) {
-                if(doc.value <= config.version)
-                {
-                    return doc;
-                }
-                return getConfigurations(doc);
-            }).catch(function(err) {
-                return getConfigurations();
-            });
-            
-            function getConfigurations(version) {
-                var ddocs = [
-                {
-                    _id: '_design/view_list',
-                    views: {
-                        by_user: {
-                            map: function (doc) { 
-                                if(doc.name.indexOf("_design") == -1) {
-                                    if(doc.userList) {
-                                        doc.userList.forEach(function(user) {
-                                            emit(user.name, doc.name.toLowerCase());
-                                        }); 
-                                    }
-                                }
-                                }.toString(),
-                            reduce: '_count'
-                        }
-                    }
-                },
-                {
-                    _id: '_design/view_product',
-                    views: {
-                        by_list_id: {
-                            map: function (doc) {
-                                if (doc.productList) {
-                                    var listProductName = [];
-                                    doc.productList.forEach(function (product) {
-                                        listProductName.push(product.name.toLowerCase());
-                                    });
-                                    emit(doc._id, listProductName);
-                                }
-
-                            }.toString(),
-                            reduce: '_count'
-                        }
-                    }
-                },
-                {
-                _id: '_design/filter',
-                filters: {
-                    by_user: function(doc, req) {  var isvalid = false; if(doc.userList) {doc.userList.forEach(function(user) { if(user.name == req.query.user) {isvalid = true; return; } }); } return isvalid }.toString()
-                }
-                }];
-
-                var keys = [];
-                ddocs.forEach(function(ddoc) {
-                    keys.push(ddoc._id);
-                });
-
-                return database.localDB.allDocs({ keys: keys })
-                    .then(function (docs) {
-                        angular.forEach(docs.rows, function (row) {
-                            var index = keys.indexOf(row.id);
-                            if (index > -1) {
-                                ddocs[index]._rev = row.value.rev;
-                            }
-                        });
-                        return database.localDB.bulkDocs(ddocs);
-                    })
-                    .then(function (docs) {
-                        var newVersion = { _id: 'version', value: config.version };
-                        if(version !== undefined) {
-                            newVersion._rev = version._rev;
-                        }
-                        return database.localDB.put(newVersion)
-                            .then(function (doc) {
-                                return doc;
-                            });
-                    });
-            }
+        //FUNCTIONS
+        
+        function init() {
+            //PouchDB.debug.enable('*');
+            PouchDB.debug.disable();
+          sv.remoteDB = new PouchDB(config.database.url+':'+config.database.port+'/'+config.database.name, {skipSetup: true} );
+          sv.localDB = new PouchDB(config.database.name);
+          sv.sync;
         }
         
-        function replicate(userName) {
+        function createDesignDoc(name, views, filters) {
+            var ddoc = {
+                _id: '_design/' + name,
+                language: 'javascript'
+            };
+            if(views) {
+                ddoc.views = views;
+            }
+            if(filters) {
+                ddoc.filters = filters;
+            }
+            return sv.localDB.get(ddoc._id).then(function(doc) {
+                ddoc._rev = doc._rev;
+                return sv.localDB.put(ddoc);
+            }).catch(function(error) {
+                if(error.name === 'not_found') {
+                    return sv.localDB.put(ddoc);
+                } else {
+                    $q.reject(error);
+                }
+            });
+        }
+        
+        function replicate(options) {
             //Verify if remote database exists
-            database.remoteDB.info().then(function(info){
-                var replicate = PouchDB.replicate(database.remoteDB._db_name, database.localDB._db_name, {filter: database.filter, query_params: {'user' : userName}});
+            return sv.remoteDB.info().then(function(info){
+                console.log('Entrou replicate start');
+                common.$broadcast(config.events.onReplicateStart, info);
+                var replicate = PouchDB.replicate(sv.remoteDB._db_name, sv.localDB._db_name, options);
                 replicate.on('complete', function (info) {
+                console.log('Entrou replicate stop');
                     common.$broadcast(config.events.onReplicateComplete, info);
                 });
-
+                return {'ok': true};
             });            
         }
 
-        function syncronize(userName, cancel) {
-            if(cancel && database.sync !== undefined) {
-                database.sync.cancel();
-                database.sync = null;
+        function syncronize(options, cancel) {
+            if(cancel && sv.sync !== undefined) {
+                console.log('Entrou syncronize cancel');
+                sv.sync.cancel();
+                sv.sync = null;
                 common.$broadcast(config.events.onSyncronizeStop);
                 return;
             }
             
-            //Verify if remote database exists
-            database.remoteDB.info().then(function(info){
-                database.sync = database.localDB.sync(database.remoteDB, {live: true, retry: true, filter: database.filter, query_params: {'user' : userName}}); 
-                //onChangeCallback();
-
-                database.sync.on('change', function (info) {
-                    if(onChangeCallback !== undefined && info.direction == 'pull') {
-                        $rootScope.$broadcast(config.events.onDataChanged, info);
+            sv.remoteDB.info().then(function(info){
+                console.log('Entrou syncronize');
+                common.$broadcast(config.events.onSyncronizeStart);
+                options.live = true;
+                options.retry = true;
+                sv.sync = sv.localDB.sync(sv.remoteDB, options); 
+                
+                sv.sync.on('change', function (info) {
+                console.log('Entrou syncronize change', info);
+                    if(info.direction == 'pull') {
+                        $rootScope.$broadcast(config.events.onDataChanged, info.change);
                     }
                 });
 
@@ -161,11 +108,11 @@
             if(options === undefined || options == null) {
                 options = {};
             }
-    	    return common.$q.when(database.localDB.allDocs(options));
+    	    return common.$q.when(sv.localDB.allDocs(options));
         }
 
         function get(key) {
-            return common.$q.when(database.localDB.get(key));
+            return common.$q.when(sv.localDB.get(key));
         }
 
         function filter(index, options) {
@@ -176,39 +123,39 @@
             if(!options.reduce) {
                 options.reduce = false;
             }
-            return common.$q.when(database.localDB.query(index, options));
+            return common.$q.when(sv.localDB.query(index, options));
         }
         
         function save(data) {
             if(data._id === undefined || data._id === 0) {
-                return common.$q.when(database.localDB.post(data));
+                return common.$q.when(sv.localDB.post(data));
             } else {
-                return database.localDB.get(data._id).then(function(doc){
+                return sv.localDB.get(data._id).then(function(doc){
                    data._rev = doc._rev;
-                   return common.$q.when(database.localDB.put(data)); 
+                   return common.$q.when(sv.localDB.put(data)); 
                 });
             }
         }
 
         function saveAll(datas) {
-            return common.$q.when(database.localDB.bulkDocs(datas));
+            return common.$q.when(sv.localDB.bulkDocs(datas));
         }
         
         function remove(key) {
-            var promisse = database.localDB.get(key).then(function (doc) {
+            var promisse = sv.localDB.get(key).then(function (doc) {
                 doc._deleted = true;
-                return database.localDB.put(doc,doc._id, doc._rev);
+                return sv.localDB.put(doc,doc._id, doc._rev);
             });
 
             return common.$q.when(promisse);
         }
         
         function getLocalDB() {
-            return database.localDB;
+            return sv.localDB;
         }
         
         function getRemoteDB() {
-            return database.remoteDB;
+            return sv.remoteDB;
         }
     }
 })();

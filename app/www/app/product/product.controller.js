@@ -5,9 +5,9 @@
         .module('colaborativelist.list')
         .controller('ProductController', ProductController);
         
-    ProductController.$inject = ['$scope', '$filter', '$state', '$ionicScrollDelegate', 'common', 'config', 'productData'];
+    ProductController.$inject = ['$scope', '$filter', '$state', '$ionicScrollDelegate', 'common', 'config', 'productData', 'unitData'];
         
-    function ProductController($scope, $filter, $state, $ionicScrollDelegate, common, config, productData) { 
+    function ProductController($scope, $filter, $state, $ionicScrollDelegate, common, config, productData, unitData) { 
         var vm = this;
         vm.translation = translation;
      
@@ -21,7 +21,7 @@
         vm.hideProductsChecked = false;
         vm.productsTotal = 0;
         vm.priceTotal = 0;
-        vm.unitCollection = productData.unitCollection();
+        vm.unitCollection = [];
         vm.canEdit = true;
         vm.listId = 0;
         
@@ -45,6 +45,8 @@
             
             vm.listId = $state.params.id;
             vm.canEdit = ($state.params.canEdit == "true");
+            
+            vm.unitCollection = unitData.all();
             
             $scope.$on(config.events.onDataChanged, function(event, data) {
                 getProducts();

@@ -7,17 +7,44 @@
         
     productData.$inject = ['common', 'database'];
     function productData(common, database) { 
-        var service = {
+        var promise = common.$q.defer();  
+            var service = {
             get: getProduct,
             list: listAllProducts,
             save: saveProduct,
             remove: removeProduct,
-            unitCollection: unitCollection
+            ready: getReady
         }
+        
+        init();
         
         return service;
         
         //FUNCTIONS
+        
+        function init() {
+            promise.resolve(database.createDesignDoc('view_product', {
+                by_list_id: {
+                    map: function (doc) {
+                        if (doc.productList) {
+                            var listProductName = [];
+                            doc.productList.forEach(function (product) {
+                                listProductName.push(product.name.toLowerCase());
+                            });
+                            emit(doc._id, listProductName);
+                        }
+
+                    }.toString(),
+                    reduce: '_count'
+                }
+            }).then(function(doc) {
+            console.log('Criou Design doc product', doc);
+        }));
+        }
+        
+        function getReady(){
+            return promise.promise;
+        }
         
         function setProductData(data) {
             var product;
@@ -194,16 +221,6 @@
                 }
                 throwError(message, err);
             }
-        }
-        
-        function unitCollection() {
-            var unitCollection = [{id:'Un', name:'Unidades'},
-                {id:'Ml', name:'Mililítros'},
-                {id:'Lt', name:'Litros'},
-                {id:'Gm', name:'Gramas'},
-                {id:'Kg', name:'Kilogramas'}];
-                
-            return unitCollection;
         }
         
         function throwError(message, cause) {

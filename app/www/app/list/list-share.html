@@ -2,7 +2,7 @@
     <ion-header-bar class="item-input-inset bar-stable bar-subheader">
         <div class="item-input-wrapper">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="search" id="searchField" placeholder="{{vm.translation.SEARCH_LABEL}}" ng-model="vm.search" ng-change="vm.onChange()" ng-focus="vm.onChange()">
+                <input type="search" id="searchField" placeholder="{{vm.translation.SEARCH_LABEL}}" ng-model="vm.search" ng-change="vm.onChange()" ng-focus="vm.onChange()" focus-me>
                 <i class="clear-search icon ion-close-circled" ng-click="vm.clear()"></i>
         </div>
         <button class="button button-small button-clear" ng-class="vm.getPermissionIcon(vm.permission)" ng-click="vm.changePermission($event)"><i class="dropdown-icon icon ion-arrow-down-b"></i></button>

@@ -28,7 +28,8 @@
         //FUNCTIONS
         function init() {
             console.log('entrou list Controller');
-            $scope.$on(config.events.onDataChanged, function(event, data) {
+            $scope.$on(config.events.onDataChanged, function(event, data) {             
+                console.log('entrou list Controller - Atulizar dados');
                 getLists();
             });
             getLists();
@@ -38,7 +39,7 @@
             console.log('listController - Entrou buscar listas - username: ', $scope.username);
             common.loading.show(vm.translation.LOADING_LABEL + ' ' +vm.translation.LIST_LABEL + ' ...');
             
-            listData.list($scope.username)
+            listData.list([config.guestName, $scope.username])
                 .then(onSuccess)
                 .finally(onFinally);
                 

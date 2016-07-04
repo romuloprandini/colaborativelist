@@ -20,7 +20,13 @@
                             'pageContent@': {
                                 templateUrl: 'app/product/product-list.html',
                                 controller: 'ProductController',
-                                controllerAs: 'vm'
+                                controllerAs: 'vm',
+                                resolve: {
+                                    'productDataResolver': ['productData', function(productData) {
+                                        console.log('entrou productDataResolver');
+                                        return productData.ready();
+                                    }]
+                                }
                             } 
                         }
                     }

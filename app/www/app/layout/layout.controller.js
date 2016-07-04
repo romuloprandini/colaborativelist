@@ -5,9 +5,8 @@
         .module('colaborativelist.layout')
         .controller('LayoutController', LayoutController);
     
-    LayoutController.$inject = ['configureServiceData'];
+    LayoutController.$inject = [];
     
-    function LayoutController(configureServiceData) {
-      console.log('terminou carregar as Configurações do APP');
+    function LayoutController() {
     }
 })();

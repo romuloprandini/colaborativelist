@@ -9,7 +9,14 @@
         var service = {
             get: get,
             all: all
-        }
+        },
+        unitCollection = [{id:'U', name:'Unidades'},
+                {id:'Ml', name:'Mililítros'},
+                {id:'L', name:'Litros'},
+                {id:'G', name:'Gramas'},
+                {id:'Kg', name:'Kilogramas'}];
+        
+        
         
         return service;
         
@@ -26,12 +33,6 @@
         }
 
         function all() {
-            var unitCollection = [{id:'U', name:'Unidades'},
-                {id:'Ml', name:'Mililítros'},
-                {id:'L', name:'Litros'},
-                {id:'G', name:'Gramas'},
-                {id:'Kg', name:'Kilogramas'}];
-                
             return unitCollection;
         }        
     }
