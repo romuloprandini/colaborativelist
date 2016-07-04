@@ -23,7 +23,7 @@
                             controller: 'LayoutController',
                             controllerAs: 'vm',
                             resolve: {
-                              'configureResolver': ['$rootScope', 'userData', 'common', function($rootScope, userData, common) {
+                              'configureResolver': ['$rootScope', 'userData', 'common', 'listData', 'productData', function($rootScope, userData, common, listData, productData) {
                                 console.log('entrou configureResolver');
         
                                 var promisseUser = userData.get()
@@ -44,7 +44,7 @@
                                 }, 100);
                                 var promisseLanguage = defered.promise;
                                 
-                                return common.$q.all([promisseUser, promisseLanguage])
+                                return common.$q.all([promisseUser, promisseLanguage, listData.ready(), productData.ready()])
                                 .then(function (promisses) {
                                     console.log('Configure app - completou as configurações');
                                     if(navigator.splashscreen) {

@@ -8,7 +8,8 @@
     database.$inject = ['$rootScope', 'config', 'common'];
     
     function database($rootScope, config, common) { 
-        var sv = this;
+        var sv = this, 
+        promise = common.$q.defer();
         
         init();
                 
@@ -32,10 +33,10 @@
             //PouchDB.debug.enable('*');
             PouchDB.debug.disable();
           sv.remoteDB = new PouchDB(config.database.url+':'+config.database.port+'/'+config.database.name, {skipSetup: true} );
-          sv.localDB = new PouchDB(config.database.name);
+          sv.localDB = new PouchDB(config.database.name, {adapter: 'websql'});
           sv.sync;
         }
-        
+          
         function createDesignDoc(name, views, filters) {
             var ddoc = {
                 _id: '_design/' + name,
@@ -47,14 +48,23 @@
             if(filters) {
                 ddoc.filters = filters;
             }
-            return sv.localDB.get(ddoc._id).then(function(doc) {
+            return sv.localDB.get(ddoc._id, {include_docs: true}).then(function(doc) {
+                if(ddoc.views !== undefined && ddoc.views.toString() == views.toString()) {
+                    common.$q.reject(doc);
+                    return;
+                }
+                if(ddoc.filters  !== undefined && ddoc.filters.toString() == filters.toString()) {
+                    common.$q.reject(doc);
+                    return;
+                }
+                    
                 ddoc._rev = doc._rev;
                 return sv.localDB.put(ddoc);
             }).catch(function(error) {
                 if(error.name === 'not_found') {
                     return sv.localDB.put(ddoc);
                 } else {
-                    $q.reject(error);
+                    common.$q.reject(error);
                 }
             });
         }

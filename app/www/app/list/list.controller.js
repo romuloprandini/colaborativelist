@@ -37,9 +37,11 @@
         
         function getLists() {
             console.log('listController - Entrou buscar listas - username: ', $scope.username);
-            common.loading.show(vm.translation.LOADING_LABEL + ' ' +vm.translation.LIST_LABEL + ' ...');
             
-            listData.list([config.guestName, $scope.username])
+            var usernameList = [config.guestName];
+            if($scope.username !== config.guestName)
+                usernameList.push($scope.username);
+            listData.list(usernameList)
                 .then(onSuccess)
                 .finally(onFinally);
                 

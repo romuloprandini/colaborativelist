@@ -21,12 +21,12 @@
                                 templateUrl: 'app/product/product-list.html',
                                 controller: 'ProductController',
                                 controllerAs: 'vm',
-                                resolve: {
+                                /*resolve: {
                                     'productDataResolver': ['productData', function(productData) {
                                         console.log('entrou productDataResolver');
                                         return productData.ready();
                                     }]
-                                }
+                                }*/
                             } 
                         }
                     }

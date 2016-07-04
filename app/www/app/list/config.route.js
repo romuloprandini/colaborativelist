@@ -22,12 +22,12 @@
                                 templateUrl: 'app/list/list.html',
                                 controller: 'ListController',
                                 controllerAs: 'vm',
-                                resolve: {
+                                /*resolve: {
                                     'listDataResolver': ['listData', function(listData) {
                                         console.log('entrou listDataResolver');
                                         return listData.ready();
                                     }]
-                                }
+                                }*/
                             } 
                         },
                         settings: {

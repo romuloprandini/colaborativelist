@@ -27,8 +27,7 @@
         sv.localUserDB = new PouchDB('user');
         sv.userDNS = config.url+'/colaborativelist/user.php';
         sv.user = getGuest();
-        $rootScope.username = sv.user.name;
-        
+        $rootScope.username = sv.user.name;        
         database.createDesignDoc('filter', null, {
             by_user: function(doc, req) {  
                 var isvalid = false; 

@@ -68,8 +68,8 @@
         }
     }
   
-  configureService.$inject = ['$state', '$rootScope', 'common', 'database', 'userData'];
-  function configureService($state, $rootScope, common, database, userData) {
+  configureService.$inject = ['$state', '$rootScope', 'common', 'database', 'userData', 'listData', 'productData'];
+  function configureService($state, $rootScope, common, database, userData, listData, productData) {
     
     return {
       configure: function() {
@@ -92,7 +92,7 @@
         }, 100);
         var promisseLanguage = defered.promise;
         
-        return common.$q.all([promisseUser, promisseLanguage])
+        return common.$q.all([promisseUser, promisseLanguage, listData.ready(), productData.ready()])
         .then(function (promisses) {
             console.log('Configure app - completou as configurações');
             if(navigator.splashscreen) {
