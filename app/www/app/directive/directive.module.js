@@ -2,6 +2,6 @@
     'use strict';
     
     angular
-        .module('colaborativelist.directive', []);
+        .module('colaborativelist.directive', ['ionic.ion.headerShrink']);
 
 })();
