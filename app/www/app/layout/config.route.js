@@ -23,34 +23,20 @@
                             controller: 'LayoutController',
                             controllerAs: 'vm',
                             resolve: {
-                              'configureResolver': ['$rootScope', 'userData', 'common', 'listData', 'productData', function($rootScope, userData, common, listData, productData) {
+                              'configureResolver': ['$rootScope', 'common', 'configureService', 'userData', function($rootScope, common, configureService, userData) {
                                 console.log('entrou configureResolver');
-        
-                                var promisseUser = userData.get()
-                                .then(function(user) {
-                                console.log('Configure app - pegou o usuario: ', user);
-                                    $rootScope.user = user;
-                                    $rootScope.username = user.name;
-                                    return common.$q.when(true);
-                                });
-                                
-                                var defered = common.$q.defer();
-                                var interval = setInterval(function(){ 
-                                    if(translation.LANGUAGE !== undefined) {
-                                    console.log('Configure app - pegou o idioma');
-                                    defered.resolve(true);
-                                    clearInterval(interval);
-                                    }
-                                }, 100);
-                                var promisseLanguage = defered.promise;
-                                
-                                return common.$q.all([promisseUser, promisseLanguage, listData.ready(), productData.ready()])
+                                                               
+                                return configureService.configure()
                                 .then(function (promisses) {
                                     console.log('Configure app - completou as configurações');
-                                    if(navigator.splashscreen) {
-                                        navigator.splashscreen.hide();
-                                    }
-                                    return true;
+                                    
+                                    return userData.get()
+                                        .then(function(user) {
+                                        console.log('Configure app - pegou o usuario: ', user);
+                                            $rootScope.user = user;
+                                            $rootScope.username = user.name;
+                                            return common.$q.when(true);
+                                        });
                                 });
 
                               }]

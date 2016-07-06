@@ -8,7 +8,8 @@
     userData.$inject = ['$rootScope', '$http', 'config', 'common', 'database'];
                 
     function userData($rootScope, $http, config, common, database) {
-      var sv = this;
+      var sv = this,
+      promise = common.$q.defer();
       init();
         
       return {
@@ -18,17 +19,19 @@
             logout: logout,
             create: createUser,
             search: searchUser,
-            isGuest: isGuest
+            isGuest: isGuest,
+            ready: getReady
         };
         
       //FUNCTIONS
         
       function init() {
-        sv.localUserDB = new PouchDB('user');
+        sv.localUserDB = new PouchDB('user', {adapter: 'websql'});
         sv.userDNS = config.url+'/colaborativelist/user.php';
         sv.user = getGuest();
-        $rootScope.username = sv.user.name;        
-        database.createDesignDoc('filter', null, {
+        $rootScope.username = sv.user.name;  
+              
+        promise.resolve(database.createDesignDoc('filter', null, {
             by_user: function(doc, req) {  
                 var isvalid = false; 
                 if(doc.userList) {
@@ -41,9 +44,11 @@
                 } 
                 return isvalid;
             }.toString()
-        }).then(function(doc) {
-            console.log('Criou Design doc user', doc);
-        });
+        }));
+    }
+    
+    function getReady() {
+        return promise.promise;
     }
         
     function setUser(data) {

@@ -9949,7 +9949,8 @@ Side Menu
   padding: 5px; }
 
 .item-divider-products {
-  padding-top: 15px; }
+  padding-top: 10px;
+  padding-bottom: 0px; }
 
 ion-item.not-syncronized {
   background: #E4E4E4 !important; }

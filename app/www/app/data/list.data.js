@@ -40,9 +40,6 @@
                         }.toString(),
                     reduce: '_count'
                 }
-            }). then(function(doc) {
-                console.log('Criou o design doc Lista', doc);
-                return doc;
             }));
             
             $rootScope.$on(config.events.onLogin, function(event, user){
@@ -108,12 +105,16 @@
                 }
         }
 
-        function listAll(userNameList) {
+        function listAll(username) {
             var options = {
                 include_docs : true, 
-                keys: userNameList, 
+                keys: [config.guestName], 
                 reduce:false
             };
+            
+            if(username !== config.guestName)
+                options.keys.push(username);
+            
             return database.filter('view_list/by_user', options)
                 .then(onSuccess)
                 .catch(onError);
@@ -121,8 +122,8 @@
             function onSuccess(doc) {
                 var listCollection = [];
                 angular.forEach(doc.rows, function (row) {
-                    if(userNameList.indexOf(row.key) != -1) {
-                        listCollection.push(setListData(row.doc, row.key));
+                    if(options.keys.indexOf(row.key) != -1) {
+                        listCollection.push(setListData(row.doc, username));
                     }
                 });
                 

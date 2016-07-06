@@ -73,28 +73,25 @@
     
     return {
       configure: function() {
-        console.log('entrou Configure app');          
-        var promisseUser = userData.get()
-        .then(function(user) {
-        console.log('Configure app - pegou o usuario: ', user);
-            $rootScope.user = user;
-            $rootScope.username = user.name;
-            return common.$q.when(true);
-        });
-        
+        console.log('entrou configureService');  
         var defered = common.$q.defer();
         var interval = setInterval(function(){ 
             if(translation.LANGUAGE !== undefined) {
-            console.log('Configure app - pegou o idioma');
+            console.log('configureService - pegou o idioma');
             defered.resolve(true);
             clearInterval(interval);
             }
         }, 100);
-        var promisseLanguage = defered.promise;
+        var promiseLanguage = defered.promise;
         
-        return common.$q.all([promisseUser, promisseLanguage, listData.ready(), productData.ready()])
+        return common.$q.all([
+            promiseLanguage, 
+            userData.ready().then(function(data) { console.log('entrou userData'); return true; }), 
+            listData.ready().then(function(data) { console.log('entrou listData'); return true; }),
+            productData.ready().then(function(data) { console.log('entrou productData'); return true; })
+            ])
         .then(function (promisses) {
-            console.log('Configure app - completou as configurações');
+            console.log('configureService - completou as configurações');
             if(navigator.splashscreen) {
                 navigator.splashscreen.hide();
             }

@@ -7,7 +7,7 @@
         
     productData.$inject = ['common', 'database'];
     function productData(common, database) { 
-        var promise = common.$q.defer();  
+        var promise = common.$q.defer();
             var service = {
             get: getProduct,
             list: listAllProducts,
@@ -37,9 +37,7 @@
                     }.toString(),
                     reduce: '_count'
                 }
-            }).then(function(doc) {
-            console.log('Criou Design doc product', doc);
-        }));
+            }));
         }
         
         function getReady(){
