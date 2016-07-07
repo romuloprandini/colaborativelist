@@ -8,7 +8,7 @@
     <ion-content auto-hide-navbar class="has-footer" delegate-handle="listProductsScroll">
         <ion-list>
             <ion-item 
-            ng-repeat="product in list1=((vm.productCollection | filter:vm.query) | orderProducts:vm.order:vm.revert | filter:{checked: false})" ng-hide="product.checked && vm.hideChecked" class="product-item">
+            ng-repeat="product in list1=((vm.productCollection | filter:vm.query) | orderProducts:vm.order:vm.revert | filter:{checked: false})" ng-hide="product.checked && vm.hideProductsChecked" class="product-item">
                 <div class="item-checkbox">
                     <label class="checkbox">
                         <input type="checkbox" 
@@ -24,13 +24,13 @@
                 </div>
                 <button ng-click="vm.showOptions($event, product)" class="button button-icon ion-android-more-vertical product-options"></button>
             </ion-item>
-            <ion-item ng-click="vm.hideCheckedProduct()" class="item-divider item-divider-products" ng-class="vm.hideChecked? 'ion-arrow-down-b': 'ion-arrow-up-b'" ng-show="list2.length > 0">
+            <ion-item ng-click="vm.hideCheckedProduct()" class="item-divider item-divider-products" ng-class="vm.hideProductsChecked? 'ion-arrow-down-b': 'ion-arrow-up-b'">
                 <a class="button button-clear button-dark icon-right button-small ">
                     <h2>{{vm.translation.CHECKED_PRODUCTS_LABEL}}</h2>
                 </a>
             </ion-item>
             <ion-item 
-            ng-repeat="product in list2=((vm.productCollection | filter:vm.query) | orderProducts:vm.order:vm.revert | filter:{checked: true})"  ng-hide="vm.hideChecked" class="product-item">
+            ng-repeat="product in list2=((vm.productCollection | filter:vm.query) | orderProducts:vm.order:vm.revert | filter:{checked: true})"  ng-hide="vm.hideProductsChecked" class="product-item">
                 <div class="item-checkbox">
                     <label class="checkbox">
                         <input type="checkbox" 

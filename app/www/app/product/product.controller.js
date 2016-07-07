@@ -127,8 +127,7 @@
                 } else {
                     vm.productCollection.splice(vm.product._id, 1);
                 }
-                
-                vm.productCollection.push(vm.product);
+                vm.productCollection.splice(vm.product._id, 0, vm.product);
                 vm.oldData = null;
                 vm.product = null;
             });
@@ -157,7 +156,7 @@
                 vm.oldData = null;
             }
             common.modal.hide();
-        };
+        }
      
         function hideCheckedProduct() {
             vm.hideProductsChecked = !vm.hideProductsChecked;
