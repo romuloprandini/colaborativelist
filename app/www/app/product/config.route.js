@@ -13,20 +13,14 @@
         function getRoutes() {
             return [
                 {
-                    name: 'app.productList',
+                    name: 'app.products',
                     config: {
-                        url: 'list/:id/:canEdit',
+                        url: 'products/:id/:canEdit',
                         views: {
-                            'pageContent@': {
+                            'list-tab': {
                                 templateUrl: 'app/product/product-list.html',
                                 controller: 'ProductController',
-                                controllerAs: 'vm',
-                                /*resolve: {
-                                    'productDataResolver': ['productData', function(productData) {
-                                        console.log('entrou productDataResolver');
-                                        return productData.ready();
-                                    }]
-                                }*/
+                                controllerAs: 'vm'
                             } 
                         }
                     }

@@ -57,17 +57,11 @@
     <script src="app/directive/directive.module.js"></script>
     <script src="app/directive/search-nav-bar.directive.js"></script>
     <script src="app/directive/avatar-person.directive.js"></script>
-    <!-- script src="app/directive/auto-hide-navbar.directive.js"></script -->
     <script src="app/directive/ionic.headerShrink.js"></script>
     <script src="app/directive/focus-me.directive.js"></script>
     
-    <script src="app/user/user.module.js"></script>
-    <script src="app/user/user.controller.js"></script>
-    
     <script src="app/layout/layout.module.js"></script>
     <script src="app/layout/config.route.js"></script>
-    <script src="app/layout/layout.controller.js"></script>
-    <script src="app/layout/sidemenu.controller.js"></script>
     
     <script src="app/list/list.module.js"></script>
     <script src="app/list/config.route.js"></script>
@@ -78,28 +72,21 @@
     <script src="app/product/config.route.js"></script>
     <script src="app/product/product.controller.js"></script>
     
+    <script src="app/compare/compare.module.js"></script>
+    <script src="app/compare/config.route.js"></script>
+    <script src="app/compare/compare.controller.js"></script>
+    
+    <script src="app/user/user.module.js"></script>
+    <script src="app/user/config.route.js"></script>
+    <script src="app/user/user.controller.js"></script>
+    
     <script src="app/filters/filter.js"></script>
   </head>
 
   <body ng-app="colaborativelist"> 
-    <ion-side-menus enable-menu-with-back-views="true">
-        <ion-side-menu-content>
-            <ion-nav-bar class="bar-positive">
-                <ion-nav-back-button></ion-nav-back-button>
-                <ion-nav-buttons side="left">
-                    <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-                    </button>
-                </ion-nav-buttons>
-            </ion-nav-bar>
-            <ion-nav-view name="pageContent"></ion-nav-view>
-        </ion-side-menu-content>
-            <!-- side Menu -->
-            
-    <ion-side-menu side="left">
-            <ion-nav-view name="sideMenuContent"></ion-nav-view>
-    </ion-side-menu>
-            <!-- end side Menu -->
-        </ion-side-menu>
-    </ion-side-menus>
+    <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-view name="pageContent"></ion-nav-view>
   </body>
 </html>

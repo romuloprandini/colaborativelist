@@ -16,12 +16,11 @@
             {
                 name: 'app',
                 config: {
+                    abstract: true,
                     url: '/',
                     views : {
                         'pageContent' : {
                             templateUrl: 'app/layout/layout.html',
-                            controller: 'LayoutController',
-                            controllerAs: 'vm',
                             resolve: {
                               'configureResolver': ['$rootScope', 'common', 'configureService', 'userData', function($rootScope, common, configureService, userData) {
                                 console.log('entrou configureResolver');
@@ -41,11 +40,6 @@
 
                               }]
                             }
-                        },
-                        'sideMenuContent' : {
-                            templateUrl: 'app/layout/sidemenu.html',
-                            controller: 'SideMenuController',
-                            controllerAs: 'vm'
                         }
                     }
                 }

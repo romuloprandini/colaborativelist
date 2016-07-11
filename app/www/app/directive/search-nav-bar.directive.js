@@ -14,7 +14,6 @@
         },
         link: link,
         restrict: 'E',
-        require: '^^ionNavBar',
         templateUrl: 'app/directive/search-nav-bar-directive.html',
         controller: SearchNavBarController,
         controllerAs: 'vm',
@@ -23,8 +22,7 @@
     
     return directive;
     
-    function link(scope, element, attrs, NavBarController) {
-        scope.NavBarController = NavBarController;
+    function link(scope, element, attrs) {
         scope.focusSearch = focusSearch;
         
         function focusSearch() {
@@ -35,22 +33,25 @@
         }
 }
 
-SearchNavBarController.$inject = ['$scope', '$timeout'];
+SearchNavBarController.$inject = ['$scope', '$timeout', '$document'];
 
-function SearchNavBarController($scope, $timeout) {
+function SearchNavBarController($scope, $timeout, $document) {
     var vm = this;
     vm.translation = translation;
     vm.clear = clear;
     vm.hide = hide;
+    vm.navbar = $document[0].body.querySelector('.nav-bar-container');
     
     init();
     
     function init() {
         $scope.$watch('vm.visibility', function(newValue, oldValue) {
-          $scope.NavBarController.showBar(!newValue);
         if(newValue) {
+          vm.navbar.style.display = 'none';
           $scope.focusSearch();
-          $scope.$parent.$hasHeader = true;
+         $scope.$parent.$hasHeader = true;
+        } else {
+            vm.navbar.style.display = '';
         }
       })
     }

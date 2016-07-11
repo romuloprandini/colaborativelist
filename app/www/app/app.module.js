@@ -9,10 +9,11 @@
             'colaborativelist.filters',
             
             /* areas */
-            'colaborativelist.user',
-            'colaborativelist.product',
             'colaborativelist.layout',
-            'colaborativelist.list'
+            'colaborativelist.list',
+            'colaborativelist.product',
+            'colaborativelist.compare',
+            'colaborativelist.user'
         ]);
         
 })();

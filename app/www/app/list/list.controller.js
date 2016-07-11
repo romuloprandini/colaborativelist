@@ -151,7 +151,7 @@
         
         function share(id) {
             common.popover.hide();
-            $state.go('app.list.share', {id: id});
+            $state.go('app.share', {id: id});
         }
         
         function showOptions($event, list) {
@@ -172,7 +172,7 @@
         }
         
         function goProducts(list) {
-            $state.go('app.productList',{id: list._id, canEdit: list.canEdit});
+            $state.go('app.products',{id: list._id, canEdit: list.canEdit});
         }
         
         function syncViewOnly(list) {

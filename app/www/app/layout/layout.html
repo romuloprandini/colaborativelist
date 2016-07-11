@@ -1,5 +1,15 @@
-﻿<ion-view hide-back-button="true" view-title="OLA MUNDO">
-    <ion-content>
-        <div>OLA MUNDO</div>
-    </ion-content>
-</ion-view>
+﻿<ion-tabs class="tabs-icon-top tabs-positive">
+
+    <ion-tab title="{{translation.LIST_LABEL}}" icon="fa fa-list fa-2" ui-sref="app.list">
+        <ion-nav-view name="list-tab"></ion-nav-view>
+    </ion-tab>
+
+    <ion-tab title="{{translation.COMPARE_LABEL}}" icon="fa fa-exchange fa-2" ui-sref="app.compare">
+        <ion-nav-view name="compare-tab"></ion-nav-view>
+    </ion-tab>
+
+    <ion-tab title="{{translation.USER_LABEL}}" icon="fa fa-user fa-2" ui-sref="app.user">
+        <ion-nav-view name="user-tab"></ion-nav-view>
+    </ion-tab>
+
+</ion-tabs>

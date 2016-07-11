@@ -23,12 +23,7 @@
         init();
         
         function init() {
-            console.log('entrou user Controller');
-          if($scope.user !== undefined && $scope.user.name !== undefined) {
-            console.log('UserController - já pegou o usuario: ', $scope.user);
-            vm.user = $scope.user
-            vm.userReady = true;            
-          } else {
+          console.log('entrou user Controller');
             userData.get().then(function(user) {
             console.log('UserController - teve que buscar usuario: ', user);
                 $scope.user = user;
@@ -38,7 +33,6 @@
             .finally(function() {
                 vm.userReady = true;
             });
-          }
         }
         
         function isLoadingUser() {
@@ -95,10 +89,6 @@
                 userData.login(vm.data.user, vm.data.password).then(function(user) {
                     vm.user = user;
                     common.popup.hide();
-                    $ionicSideMenuDelegate.toggleLeft();
-                    $state.go('app', {}, {'location': 'replace'}).then(function(dados) {
-                        $ionicHistory.clearHistory();
-                    });
                 })
                 .finally(function() {
                     common.loading.hide();
@@ -111,12 +101,7 @@
             common.loading.show(vm.translation.LOGOUTING_LABEL + ' ...');
                 
             userData.logout().then(function(user){
-                $scope.user = user;
                 vm.user = user;
-                $ionicSideMenuDelegate.toggleLeft();
-                    $state.go('app', {}, {'location': 'replace'}).then(function(dados) {
-                        $ionicHistory.clearHistory();
-                    });
             })
             .finally(function() {
                 common.loading.hide();

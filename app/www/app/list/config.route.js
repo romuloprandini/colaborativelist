@@ -18,34 +18,21 @@
                         cache: false,
                         url: 'list',
                         views: {
-                            'pageContent@': {
+                            'list-tab': {
                                 templateUrl: 'app/list/list.html',
                                 controller: 'ListController',
-                                controllerAs: 'vm',
-                                /*resolve: {
-                                    'listDataResolver': ['listData', function(listData) {
-                                        console.log('entrou listDataResolver');
-                                        return listData.ready();
-                                    }]
-                                }*/
+                                controllerAs: 'vm'
                             } 
-                        },
-                        settings: {
-                            nav: 1,
-                            content: {
-                                icon: 'fa fa-th-list',
-                                text: 'LIST_LABEL'
-                            }
                         }
                     }
                 },
                 {
-                    name: 'app.list.share', 
+                    name: 'app.share', 
                     config: {
                         cache: false,
                         url: 'share/:id',
                         views: {
-                            'pageContent@': {
+                            'list-tab': {
                                 templateUrl: 'app/list/list-share.html',
                                 controller: 'ListShareController',
                                 controllerAs: 'vm'

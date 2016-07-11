@@ -28,8 +28,6 @@
       function init() {
         sv.localUserDB = new PouchDB('user', {adapter: 'websql'});
         sv.userDNS = config.url+'/colaborativelist/user.php';
-        sv.user = getGuest();
-        $rootScope.username = sv.user.name;  
               
         promise.resolve(database.createDesignDoc('filter', null, {
             by_user: function(doc, req) {  
@@ -101,7 +99,7 @@
         return common.$q.when(getUserInternal());
         
         function getUserInternal() {
-        if(!isGuest(sv.user.name))
+        if(sv.user)
         {
             return common.$q.resolve(sv.user);
         }
@@ -121,13 +119,17 @@
                 }
                 return getUserStored().then(function(user) {
                     if(user.username !== '' && user.password !== '') {
-                        return login(user.username, user.password);
+                        sv.user = login(user.username, user.password);
+                        $rootScope.username = sv.user.name;
+                        return sv.user;
                     }
                     return getGuest();
                 });
             })
             .catch(function(err) {
-                return getGuest();
+                sv.user = getGuest();
+                $rootScope.username = sv.user.name;
+                return sv.user;
             });
         }
 

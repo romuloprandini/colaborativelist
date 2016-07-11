@@ -20,8 +20,7 @@
         onSyncronizeStart: 'data.onSyncronizeStart',
         onSyncronizeStop: 'data.onSyncronizeStop',
         onDataChanged: 'data.onDataChanged',
-        onDatabaseConfigurated: 'data.configurationComplete',
-        fuck: 'fuck'        
+        onDatabaseConfigurated: 'data.configurationComplete'
     }
     
     var config = {
@@ -64,7 +63,7 @@
             routeCfg.config.$stateProvider = $stateProvider;
             routeCfg.config.$urlRouterProvider = $urlRouterProvider;
             routeCfg.config.docTitle = '';
-            routeCfg.config.resolveAlways = { };
+            routeCfg.config.resolve = 'list';
         }
     }
   

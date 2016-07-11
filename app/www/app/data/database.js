@@ -84,7 +84,7 @@
         }
 
         function syncronize(options, cancel) {
-            if(cancel && sv.sync !== undefined) {
+            if(cancel && sv.sync) {
                 console.log('Entrou syncronize cancel');
                 sv.sync.cancel();
                 sv.sync = null;

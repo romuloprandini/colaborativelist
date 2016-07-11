@@ -10,6 +10,7 @@
     function routehelperConfig() {
         /* jshint validthis:true */
         this.config = {
+            resolve : '/'
             // These are the properties we need to set
             // resolveAlways: {ready: function(){ } }
         };
@@ -51,10 +52,9 @@
 
         function configureRoutes(routes) {
             routes.forEach(function(route) {
-                route.config.resolve = angular.extend(route.config.resolve || {}, routehelperConfig.config.resolveAlways);
                 $stateProvider.state(route.name, route.config);
             });
-            $urlRouterProvider.otherwise('/');
+            $urlRouterProvider.otherwise(routehelperConfig.config.resolve);
         }
 
         function handleRoutingErrors() {
@@ -72,7 +72,7 @@
                         'unknown target';
                     var msg = 'Error routing to ' + destination + '. ' + (rejection.msg || '');
                     logger.warning(msg, [current]);
-                    $location.path('/');
+                    $location.path(routehelperConfig.config.resolve);
                 }
             );
         }
