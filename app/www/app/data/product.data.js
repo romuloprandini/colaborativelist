@@ -35,7 +35,16 @@
                         }
 
                     }.toString(),
-                    reduce: '_count'
+                    reduce: '_count'/*function(keys, values, rereduce) {
+                        if(rereduce) return sum(values);
+                        var total = 0;
+                        if(values !== undefined) {
+                            values.forEach(function(value) {
+                                if(!value._deleted) total++;
+                            });
+                        }
+                        return total;
+                    }*/
                 }
             }));
         }
@@ -90,11 +99,11 @@
            function onSuccess(docs) {
                 if(docs.rows.length > 0) {
                     docs.rows[0].doc.productList.forEach(function (product, index) {
-                        if(product._deleted != true)
-                        {
+                        /*if(!product._deleted)
+                        {*/
                             product._id = index;
                             productList.push(setProductData(product));
-                        }
+                        /*}*/
                     });
                 }
                 return productList;
@@ -193,7 +202,7 @@
                 throwError(translation.LIST_ID_REQUIRED);
             }
             
-            if (key === undefined || key < 1) {
+            if (key === undefined || key < 0) {
                 throwError(translation.INVALID_PRODUCT_ERROR);
             }
             
@@ -202,7 +211,8 @@
                 .catch(onError);
             
             function onGetList(list) {
-                list.productList[key]._deleted = true;
+                /*list.productList[key]._deleted = true;*/
+                list.productList.splice(key,1);
                 
                 return database.save(list)
                     .then(onSaveList);

@@ -9908,10 +9908,19 @@ Side Menu
 .product-checked > h2 {
   color: #2FC4B6 !important; }
 
+.list-title-only {
+  height: 55px;
+  padding-top: 12px; }
+
 .list-details {
   display: block;
-  font-size: small !important;
-  color: #999999 !important; }
+  font-size: 10px !important;
+  color: #999999 !important;
+  margin-top: -5px; }
+
+.list-details .amount, .list-details .measure {
+  display: block;
+  height: 14px; }
 
 .list-price {
   position: absolute;
@@ -9946,7 +9955,8 @@ Side Menu
   font-size: 24px; }
 
 .product-item {
-  padding: 5px; }
+  padding: 5px;
+  height: 55px; }
 
 .item-divider-products {
   padding-top: 10px;

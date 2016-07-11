@@ -29,6 +29,7 @@
         vm.onSelectUser = onSelectUser;
         vm.remove = remove;
         vm.save = save;
+        vm.isOwner = isOwner;
         
         init();
     
@@ -74,7 +75,13 @@
                               {name: vm.translation.VISUALIZE_LABEL, action: function(){ setPermission('read', index)}, classe: '', icon: {left:'icon-left ion-eye'}}];
         
         common.popover.show($event, $scope);
-    }   
+    }
+    
+    function isOwner(permission) {
+        return (permission == 'owner');
+    }
+    
+       
     function clear() {
         vm.search = '';
         vm.selected = true;
@@ -111,10 +118,10 @@
     }    
     
     function onSelectUser(user) {
-        vm.selected = true;
         if(!userAlreadyInList(user.name)) {
             var newUser = {name: user.name, permission: vm.permission};
             vm.userList.push(newUser);
+            vm.clear();
         }
     };
     

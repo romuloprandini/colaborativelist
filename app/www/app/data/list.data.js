@@ -66,10 +66,13 @@
                     canSync: false,
                     canEdit: true
                 };
+                listReturn.productList = [];
                 if(data.productList !== undefined) {
-                    listReturn.productList = data.productList;
-                } else {
-                    listReturn.productList = [];
+                    data.productList.forEach(function(product, idx) {
+                       if(!product._deleted) {
+                           listReturn.productList.push(product);
+                       }
+                    });
                 }
                 if(data.userList.length == 1 && data.userList[0].name == config.guestName) {
                     listReturn.isGuest = true;
@@ -163,7 +166,7 @@
                 } else {
                     list = {
                         name: list.name,
-                        userList: [{name: username, permission: 'edit'}],
+                        userList: [{name: username, permission: 'owner'}],
                         productList: []
                     }
                     
@@ -237,13 +240,13 @@
             return getList(key).then(function (list) {
                 list.userList = userList;
                 return saveList(list).then(function (doc) {
-                    return doc.ok;
+                    return doc._id;
                 });
             });
         }
         
         function syncList(list, username) {
-            list.userList = [{name: username, permission: 'edit'}];
+            list.userList = [{name: username, permission: 'owner'}];
             return getList(list._id).then(function(data){
                 data.userList = list.userList;
                 return database.save(data)

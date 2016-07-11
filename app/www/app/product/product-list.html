@@ -15,12 +15,15 @@
                         ng-model="product.checked"
                         ng-checked="product.checked" ng-change="vm.onCheck(product)">
                     </label>
-                    <span ng-class="{'product-checked': product.checked}">
-                    <h2>{{product.name}}</h2>
-                    <div class="list-details">{{product.amount}} x {{product.price | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}} / 
-                    {{product.measure}} {{product.unit}}</div>
-                    <div class="list-price">{{(product.amount * product.price) | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</div>
-                    </span>
+                    <div ng-class="{'list-title-only':!vm.hasAmount(product) && !vm.hasMeasure(product)}">
+                        <h2>{{product.name}}</h2>
+                        <div class="list-details">
+                                <span class="amount" ng-show="vm.hasAmount(product)">{{product.amount}} x {{product.price | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</span>
+                                <span class="measure" ng-show="vm.hasMeasure(product)">{{product.measure}} {{product.unit}}</span>        
+                            </div>
+                        <div class="list-price">{{(product.amount * product.price) | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</div>
+                        </div>
+                    </div>
                 </div>
                 <button ng-click="vm.showOptions($event, product)" class="button button-icon ion-android-more-vertical product-options"></button>
             </ion-item>
@@ -37,12 +40,14 @@
                         ng-model="product.checked"
                         ng-checked="product.checked" ng-change="vm.onCheck(product)">
                     </label>
-                    <span ng-class="{'product-checked': product.checked}">
+                    <div ng-class="{'list-title-only':!vm.hasAmount(product) && !vm.hasMeasure(product)}" class="product-checked">
                     <h2>{{product.name}}</h2>
-                    <div class="list-details">{{product.amount}} x {{product.price | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}} / 
-                    {{product.measure}} {{product.unit}}</div>
+                     <div class="list-details">
+                            <span class="amount" ng-show="vm.hasAmount(product)">{{product.amount}} x {{product.price | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</span>
+                            <span class="measure" ng-show="vm.hasMeasure(product)">{{product.measure}} {{product.unit}}</span>        
+                        </div>
                     <div class="list-price">{{(product.amount * product.price) | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</div>
-                    </span>
+                    </div>
                 </div>
                 <button ng-click="vm.showOptions($event, product)" class="button button-icon ion-android-more-vertical product-options"></button>
             </ion-item>

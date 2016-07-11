@@ -44,12 +44,7 @@
                 <ion-item class="heading-item" ng-show="!vm.isLoadingUser() && vm.isGuest()">
                     <div class="row">
                         <div class="col">
-                            <!-- We need a wrapper with width set for the preload image directive -->
-                            <div class="user-image-outer">
-                                <div class="avatar rounded-image">
-                                <img class="user-image" avatar-person>
-                                </div>
-                            </div>
+                            <span><h1>{{vm.translation.LOGIN_LABEL}}</h1></span>
                         </div>
                     </div>
                     <div class="row">

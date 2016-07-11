@@ -4,7 +4,7 @@
         <button class="button button-clear button-icon ion-search" ng-click="vm.showSearch(true)"></button>
     </ion-nav-buttons>
     <search-nav-bar show-search="vm.hasSearch" filter="vm.query.name"></search-nav-bar>
-    <ion-content header-shrink>
+    <ion-content>
         <ion-list> 
             <ion-item class="item-icon-left" ng-class="{'not-syncronized' : vm.syncViewOnly(list)}" ng-repeat="list in filtered=(vm.listCollection | orderBy:'name' | filter:vm.query)" ng-click="vm.goProducts(list)">
             <i class="icon ion-document-text"></i>

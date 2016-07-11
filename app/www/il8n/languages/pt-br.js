@@ -111,6 +111,15 @@
     //ERROR
     SAVE_PRODUCT_ERROR : "Erro ao salvar o produto!",
     DELETE_PRODUCT_ERROR : "Erro ao excluir o produto PRODUCT_NAME!",
+	
+	//Unit
+	UNIT_LIST: [
+		{id:'Un', name:'Unidades'},
+        {id:'Ml', name:'Mililítros'},
+        {id:'Lt', name:'Litros'},
+        {id:'Gm', name:'Gramas'},
+        {id:'Kg', name:'Kilogramas'}
+	],
     
     //CURRENCY
 	CURRENCY_SIGN_LABEL : "R$",

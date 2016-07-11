@@ -32,9 +32,10 @@
             <ion-item class="item-button-right"  ng-repeat="user in vm.userList track by $index">
                 
                 <h2>{{user.name}}</h2>
-                <span ng-hide="vm.isCurrectUser(user.name)" class="badge badge-light" ng-click="vm.changePermission($event, $index)"><i class="icon" ng-class="vm.getPermissionIcon(user.permission)"></i><i class="dropdown-icon icon ion-arrow-down-b"></i></span>
+                <span ng-hide="vm.isCurrectUser(user.name) || vm.isOwner(user.permission)" class="badge badge-light" ng-click="vm.changePermission($event, $index)"><i class="icon" ng-class="vm.getPermissionIcon(user.permission)"></i><i class="dropdown-icon icon ion-arrow-down-b"></i></span>
                 <button ng-show="vm.isCurrectUser(user.name)" class="button button-clear item-note">(você)</span>
-                <button ng-hide="vm.isCurrectUser(user.name)" class="button button-icon icon ion-trash-a" ng-click="vm.remove($index)"></button>
+                <button ng-show="!vm.isCurrectUser(user.name) && vm.isOwner(user.permission)" class="button button-clear item-note">(Criador)</span>
+                <button ng-hide="vm.isCurrectUser(user.name) || vm.isOwner(user.permission)" class="button button-icon icon ion-trash-a" ng-click="vm.remove($index)"></button>
             </ion-item>
             <ion-item class="no-items">
                 {{vm.translation.NO_RECORDS_FOUND}}

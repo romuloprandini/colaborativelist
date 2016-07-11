@@ -5,9 +5,9 @@
         .module('colaborativelist.list')
         .controller('ProductController', ProductController);
         
-    ProductController.$inject = ['$scope', '$filter', '$state', '$ionicScrollDelegate', 'common', 'config', 'productData', 'unitData'];
+    ProductController.$inject = ['$scope', '$filter', '$state', '$ionicScrollDelegate', 'common', 'config', 'productData'];
         
-    function ProductController($scope, $filter, $state, $ionicScrollDelegate, common, config, productData, unitData) { 
+    function ProductController($scope, $filter, $state, $ionicScrollDelegate, common, config, productData) { 
         var vm = this;
         vm.translation = translation;
      
@@ -21,7 +21,7 @@
         vm.hideProductsChecked = false;
         vm.productsTotal = 0;
         vm.priceTotal = 0;
-        vm.unitCollection = [];
+        vm.unitCollection = vm.translation.UNIT_LIST;
         vm.canEdit = true;
         vm.listId = 0;
         
@@ -33,6 +33,8 @@
         vm.close = close;
         vm.hideCheckedProduct = hideCheckedProduct;
         vm.onCheck = onCheck;
+        vm.hasAmount = hasAmount; 
+        vm.hasMeasure = hasMeasure;
         
         init();
         
@@ -45,8 +47,6 @@
             
             vm.listId = $state.params.id;
             vm.canEdit = ($state.params.canEdit == "true");
-            
-            vm.unitCollection = unitData.all();
             
             $scope.$on(config.events.onDataChanged, function(event, data) {
                 getProducts();
@@ -206,6 +206,14 @@
                                 {name: vm.translation.DELETE_LABEL, action: function(){ remove(product)}, classe: '', icon: {left:'icon-left ion-trash-a'}}];
 
             common.popover.show($event, $scope);
+        }
+        
+        function hasAmount(product) {
+            return (product.amount !== undefined && product.amount > 0); 
+        }
+        
+        function hasMeasure(product) {
+            return (product.measure !== undefined && product.amount > 0);
         }
     }
 })();
