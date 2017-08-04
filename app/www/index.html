@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <!-- compiled css output -->
+    <link href="content/css/ionic.app.css" rel="stylesheet"> 
+    <link href="lib/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/toastr/toastr.css" rel="stylesheet">
+    
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/angular-animate/angular-animate.min.js"></script>
+    <script src="lib/angular-resource/angular-resource.min.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="lib/angular-route/angular-route.min.js"></script>
+    
+    <!-- 3rd parties -->  
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/accounting/accounting.js"></script>
+    <script src="lib/pouchdb/dist/pouchdb.min.js"></script>
+    <script src="lib/pouchdb-authentication/dist/pouchdb.authentication.min.js"></script>
+    <script src="lib/toastr/toastr.min.js"></script>
+    <script src="il8n/il8n.js"></script>
+    
+    
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="app/app.module.js"></script>
+    
+    <script src="app/core/core.module.js"></script>
+    <script src="app/core/constants.js"></script>
+    <script src="app/core/config.js"></script>
+    <script src="app/core/common.js"></script>
+    <script src="app/core/run.js"></script>
+        
+    <script src="app/blocks/logger/logger.module.js"></script>
+    <script src="app/blocks/logger/logger.js"></script>
+    <script src="app/blocks/exception/exception.module.js"></script>
+    <script src="app/blocks/exception/exception-handler.js"></script>
+    <script src="app/blocks/exception/exception.js"></script>
+    <script src="app/blocks/router/router.module.js"></script>
+    <script src="app/blocks/router/router.js"></script>
+        
+    <script src="app/data/data.module.js"></script>
+    <script src="app/data/database.js"></script>
+    <script src="app/data/user.data.js"></script>
+    <script src="app/data/list.data.js"></script>
+    <script src="app/data/product.data.js"></script>
+    <script src="app/data/unit.data.js"></script>
+    
+    <script src="app/directive/directive.module.js"></script>
+    <script src="app/directive/search-nav-bar.directive.js"></script>
+    <script src="app/directive/avatar-person.directive.js"></script>
+    <script src="app/directive/ionic.headerShrink.js"></script>
+    <script src="app/directive/focus-me.directive.js"></script>
+    
+    <script src="app/layout/layout.module.js"></script>
+    <script src="app/layout/config.route.js"></script>
+    
+    <script src="app/list/list.module.js"></script>
+    <script src="app/list/config.route.js"></script>
+    <script src="app/list/list.controller.js"></script>
+    <script src="app/list/list-share.controller.js"></script>
+    
+    <script src="app/product/product.module.js"></script>
+    <script src="app/product/config.route.js"></script>
+    <script src="app/product/product.controller.js"></script>
+    
+    <script src="app/compare/compare.module.js"></script>
+    <script src="app/compare/config.route.js"></script>
+    <script src="app/compare/compare.controller.js"></script>
+    
+    <script src="app/user/user.module.js"></script>
+    <script src="app/user/config.route.js"></script>
+    <script src="app/user/user.controller.js"></script>
+    
+    <script src="app/filters/filter.js"></script>
+  </head>
+
+  <body ng-app="colaborativelist"> 
+    <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-view name="pageContent"></ion-nav-view>
+  </body>
+</html>

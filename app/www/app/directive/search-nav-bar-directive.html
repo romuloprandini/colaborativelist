@@ -1,0 +1,8 @@
+<ion-header-bar class="item-input-inset bar-stable" ng-show="vm.visibility">
+    <div class="item-input-wrapper">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="search" id="searchField" placeholder="{{vm.translation.SEARCH_LABEL}}" ng-model="vm.filter">
+            <i class="clear-search icon ion-close-circled" ng-click="vm.clear()"></i>
+    </div>
+    <button class="button button-clear button-small" ng-click="vm.hide(false)">{{vm.translation.CANCEL_LABEL}}</button>
+</ion-header-bar>

@@ -1,0 +1,8 @@
+{
+  "name": "Colaborative List",
+  "app_id": "f00f044b",
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*"
+  ]
+}

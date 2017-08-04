@@ -1,0 +1,65 @@
+<ion-view title="{{vm.translation.PRODUCT_LABEL}}">
+    <search-nav-bar show-search="vm.hasSearch" filter="vm.query.name"></search-nav-bar>
+    <ion-nav-buttons side="right">
+        <button ng-show="vm.canEdit" class="button button-clear button-icon ion-plus" ng-click="vm.edit()"></button>
+        <button class="button button-clear button-icon ion-search" ng-click="vm.showSearch(true)"></button>
+        <button class="button button-clear fa fa-sort-alpha-asc" ng-click="vm.openOrder($event)"></button>
+    </ion-nav-buttons>
+    <ion-content auto-hide-navbar class="has-footer" delegate-handle="listProductsScroll">
+        <ion-list>
+            <ion-item 
+            ng-repeat="product in list1=((vm.productCollection | filter:vm.query) | orderProducts:vm.order:vm.revert | filter:{checked: false})" ng-hide="product.checked && vm.hideProductsChecked" class="product-item">
+                <div class="item-checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox" 
+                        ng-model="product.checked"
+                        ng-checked="product.checked" ng-change="vm.onCheck(product)">
+                    </label>
+                    <div ng-class="{'list-title-only':!vm.hasAmount(product) && !vm.hasMeasure(product)}">
+                        <h2>{{product.name}}</h2>
+                        <div class="list-details">
+                                <span class="amount" ng-show="vm.hasAmount(product)">{{product.amount}} x {{product.price | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</span>
+                                <span class="measure" ng-show="vm.hasMeasure(product)">{{product.measure}} {{product.unit}}</span>        
+                            </div>
+                        <div class="list-price">{{(product.amount * product.price) | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</div>
+                        </div>
+                    </div>
+                </div>
+                <button ng-click="vm.showOptions($event, product)" class="button button-icon ion-android-more-vertical product-options"></button>
+            </ion-item>
+            <ion-item ng-click="vm.hideCheckedProduct()" class="item-divider item-divider-products" ng-class="vm.hideProductsChecked? 'ion-arrow-down-b': 'ion-arrow-up-b'">
+                <a class="button button-clear button-dark icon-right button-small ">
+                    <h2>{{vm.translation.CHECKED_PRODUCTS_LABEL}}</h2>
+                </a>
+            </ion-item>
+            <ion-item 
+            ng-repeat="product in list2=((vm.productCollection | filter:vm.query) | orderProducts:vm.order:vm.revert | filter:{checked: true})"  ng-hide="vm.hideProductsChecked" class="product-item">
+                <div class="item-checkbox">
+                    <label class="checkbox">
+                        <input type="checkbox" 
+                        ng-model="product.checked"
+                        ng-checked="product.checked" ng-change="vm.onCheck(product)">
+                    </label>
+                    <div ng-class="{'list-title-only':!vm.hasAmount(product) && !vm.hasMeasure(product)}" class="product-checked">
+                    <h2>{{product.name}}</h2>
+                     <div class="list-details">
+                            <span class="amount" ng-show="vm.hasAmount(product)">{{product.amount}} x {{product.price | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</span>
+                            <span class="measure" ng-show="vm.hasMeasure(product)">{{product.measure}} {{product.unit}}</span>        
+                        </div>
+                    <div class="list-price">{{(product.amount * product.price) | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:vm.translation.CURRENCY_TOUSAND_STEP}}</div>
+                    </div>
+                </div>
+                <button ng-click="vm.showOptions($event, product)" class="button button-icon ion-android-more-vertical product-options"></button>
+            </ion-item>
+            <ion-item ng-show="list1.length < 1 && list2.length < 1">
+            {{vm.translation.NO_RECORDS_FOUND}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+    <div class="bar bar-footer bar-assertive">
+        <div class="list-total">
+            <div class="itens">{{vm.translation.ITENS_LABEL}} <strong>{{vm.productsTotal}}</strong></div>
+            <div class="price">{{vm.translation.PRICE_LABEL}} <strong>{{vm.priceTotal | formatMoney:vm.translation.CURRENCY_SIGN_LABEL:vm.translation.CURRENCY_DECIMAL_STEP:translation.CURRENCY_TOUSAND_STEP}}</strong></div>
+        </div>
+    </div>
+</ion-view>

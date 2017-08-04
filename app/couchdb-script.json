@@ -1,0 +1,120 @@
+{
+   "_id": "_design/users",
+   "language": "javascript",
+   "views": {
+       "name": {
+           "map": "function(doc) {var name = doc._id.replace('org.couchdb.user:','');  emit(name, doc.metadata);}"
+       }
+   }
+}
+
+{
+   "_id": "org.couchdb.user:app",
+   "password_scheme": "pbkdf2",
+   "iterations": 10,
+   "name": "app",
+   "type": "user",
+   "roles": [
+   ],
+   "derived_key": "17937e8d9df3a2cb04376b42b1c5404fbb92e149",
+   "salt": "b2fda63c4fad8f8460beda8575ba0b69",
+   "metadata": {
+       "fullName": "Romulo Prandini Lima",
+       "email": "romuloprandini@gmail.com",
+       "avatar": "data:image/gif;base64,R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
+   }
+}
+
+
+{
+   "_id": "1BF58BDB-DCC1-D128-901A-65A2769D210C",
+   "name": "Teste 2",
+   "user": "app",
+   "productList": [
+   ]
+}
+
+{
+   "_id": "B9DA0F68-5B9D-3E3C-AE84-E886D6408FF2",
+   "name": "Lista teste",
+   "user": "app",
+   "productList": [
+       {
+           "name": "Produto 1",
+           "price": 100,
+           "unit": 10,
+           "amount": 1,
+           "measure": "U",
+           "checked": false
+       }
+   ]
+}
+
+{
+   "_id": "E4701DE5-C500-623E-A45A-4FD1221B5373",
+   "name": "Teste 1",
+   "user": "app",
+   "productList": [
+       {
+           "name": "Produto 2",
+           "price": 10,
+           "unit": 1,
+           "amount": 200,
+           "measure": "Ml",
+           "checked": false
+       },
+       {
+           "name": "Produto 1",
+           "price": 20,
+           "unit": 1,
+           "amount": 100,
+           "measure": "Ml",
+           "checked": true
+       },
+       {
+           "name": "Produto 4",
+           "price": 200,
+           "unit": 1,
+           "amount": 100,
+           "measure": "Ml",
+           "checked": false
+       },
+       {
+           "name": "Produto 3",
+           "price": 500,
+           "unit": 10,
+           "amount": 1,
+           "measure": "U",
+           "checked": true
+       }
+   ]
+}
+
+{
+   "_id": "_design/filter",
+   "filters": {
+       "by_user": "function(doc, req) { return (doc.user == req.query.user) }"
+   }
+}
+
+{
+   "_id": "_design/view_list",
+   "language": "javascript",
+   "views": {
+       "by_user": {
+           "map": "function (doc) { if(doc.name.indexOf(\"_design\") == -1) emit([doc.user, doc.name.toLowerCase()]) }",
+           "reduce": "_count"
+       }
+   }
+}
+
+{
+   "_id": "_design/view_product",
+   "language": "javascript",
+   "views": {
+       "by_list_id_and_name": {
+           "map": "function (doc) { if (doc.productList) { var listProductName = []; doc.productList.forEach(function (product) { listProductName.push(product.name.toLowerCase()); }); emit([doc._id, listProductName]); }}",
+           "reduce": "_count"
+       }
+   }
+}

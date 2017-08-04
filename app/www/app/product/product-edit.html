@@ -1,0 +1,49 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">{{vm.translation.PRODUCT_LABEL}}</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="vm.close()">{{vm.translation.CLOSE_LABEL}}</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">{{vm.translation.PRODUCT_LABEL}}</span>
+          <input type="text" ng-model="vm.product.name" placeholder="{{vm.translation.PRODUCT_LABEL}}" focus-me>
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">{{vm.translation.PRICE_LABEL}}</span>
+          <input type="number" ng-model="vm.product.price" placeholder="{{vm.translation.PRICE_LABEL}}">
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">{{vm.translation.AMOUNT_LABEL}}</span>
+          <input type="number" ng-model="vm.product.amount" placeholder="{{vm.translation.AMOUNT_LABEL}}">
+        </label>
+        <div class="item item-input item-floating-label item-select">
+          <label>
+            <span class="input-label">{{vm.translation.MEASURE_LABEL}}</span>
+            <input type="number" ng-model="vm.product.measure" placeholder="{{vm.translation.MEASURE_LABEL}}">
+          </label>          
+          <select ng-model="vm.product.unit" ng-options="unit.id as unit.name for unit in vm.unitCollection">
+            <option value="">Selecione</option>
+          </select>
+        </div>
+        <!--label class="item item-input item-stacked-label">
+          <span class="input-label">{{vm.translation.UNIT_LABEL}}</span>
+          <select ng-model="vm.product.unit" ng-options="unit.id as unit.name for unit in vm.unitCollection"></select>
+        </label -->
+        <label class="item item-stacked-label item-toggle">
+          <span class="input-label">{{vm.translation.CHECKED_LABEL}}</span>
+          <label class="toggle toggle-dark">
+              <input type="checkbox" ng-model="vm.product.checked">
+              <div class="track">
+                <div class="handle"></div>
+              </div>
+            </label>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" ng-click="vm.save()">{{vm.translation.SAVE_LABEL}}</button>
+        </label>
+      </div>
+  </ion-content>
+</ion-modal-view>

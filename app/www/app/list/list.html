@@ -1,0 +1,22 @@
+<ion-view hide-back-button="true" view-title="{{vm.translation.LIST_LABEL}}">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear button-icon ion-plus" ng-click="vm.edit()"></button>
+        <button class="button button-clear button-icon ion-search" ng-click="vm.showSearch(true)"></button>
+    </ion-nav-buttons>
+    <search-nav-bar show-search="vm.hasSearch" filter="vm.query.name"></search-nav-bar>
+    <ion-content>
+        <ion-list> 
+            <ion-item class="item-icon-left" ng-class="{'not-syncronized' : vm.syncViewOnly(list)}" ng-repeat="list in filtered=(vm.listCollection | orderBy:'name' | filter:vm.query)" ng-click="vm.goProducts(list)">
+            <i class="icon ion-document-text"></i>
+            <h2>{{list.name}}</h2>
+            <span class="badge badge-dark">{{list.productList.length}}</span>
+            <button ng-click="vm.showOptions($event, list)" class="button button-icon ion-android-more-vertical product-options"></button>
+            <p ng-show="list.canSync">{{vm.translation.NOT_SYNCRONIZED_LABEL}}</p>
+            <p ng-hide="list.canEdit">{{vm.translation.READ_ONLY_LABEL}}</p>
+            </ion-item>
+            <ion-item class="no-items">
+            {{vm.translation.NO_RECORDS_FOUND}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

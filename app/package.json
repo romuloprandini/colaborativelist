@@ -1,0 +1,29 @@
+{
+  "name": "org.colaborativelist",
+  "version": "0.1.1",
+  "description": "Create and share a list with your friends",
+  "private": true,
+  "devDependencies": {
+    "@ionic/cli-plugin-cordova": "1.6.2",
+    "@ionic/cli-plugin-gulp": "1.1.1",
+    "@ionic/cli-plugin-ionic1": "2.1.1",
+    "gulp": "^3.5.6",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^3.1.0",
+    "ionic": "3.7.0"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-device",
+    "cordova-plugin-console",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-statusbar",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-x-toast",
+    "cordova-plugin-sqlite-2"
+  ],
+  "cordovaPlatforms": [
+    "android"
+  ]
+}
