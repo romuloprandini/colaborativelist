@@ -2,7 +2,7 @@
     'use strict';
 
     var databaseSettings = {
-        url: 'http://ec2-54-165-112-168.compute-1.amazonaws.com',
+        url: 'http://localhost',
         port: 5984,
         name: 'list'
         
@@ -24,7 +24,7 @@
     }
     
     var config = {
-        url: 'http://ec2-54-165-112-168.compute-1.amazonaws.com',
+        url: 'http://localhost',
         events: events,
         imageSettings: imageSettings,
         version: '1.0.0',
