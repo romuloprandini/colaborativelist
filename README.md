@@ -1,2 +1,2 @@
-# colaborativelist
-A colaborative list using Ionic Framework and PouchDB/CouchDB
+# collaborativelist
+A collaborative list using Ionic Framework and PouchDB/CouchDB
